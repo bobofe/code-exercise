@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        ul{
+            list-style: none;
+            overflow: hidden;
+        }
+        .calender{
+            margin: 0 auto;
+            width: 564px;
+
+        }
+        input{
+            border: none;
+            padding: 0;
+        }
+        li{
+            width: 80px;
+            float: left;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        section{
+            border: 2px solid black;
+        }
+        section header{
+            border-bottom: 1px solid black;
+        }
+        .default{
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<div class="calender">
+    <header>
+        <form action="">
+            年：<input id="year" class="" type="number" min="1900" max="2100" step="1" value="2017">
+            月：<input id="month" class="" type="number" min="1" max="12" step="1" value="7">
+        </form>
+    </header>
+    <section>
+        <header>
+            <ul class="week">
+                <li class="week-day">星期日</li>
+                <li class="week-day">星期一</li>
+                <li class="week-day">星期二</li>
+                <li class="week-day">星期三</li>
+                <li class="week-day">星期四</li>
+                <li class="week-day">星期五</li>
+                <li class="week-day">星期六</li>
+            </ul>
+        </header>
+
+        <ul class="day-list">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+            <li>9</li>
+            <li>10</li>
+            <li>11</li>
+            <li>12</li>
+            <li>13</li>
+            <li>14</li>
+            <li>15</li>
+            <li>16</li>
+            <li>17</li>
+            <li>18</li>
+            <li>19</li>
+            <li>20</li>
+            <li>21</li>
+            <li>22</li>
+            <li>23</li>
+            <li>24</li>
+            <li>25</li>
+            <li>26</li>
+            <li>27</li>
+            <li>28</li>
+            <li>29</li>
+            <li>30</li>
+            <li>31</li>
+        </ul>
+    </section>
+</div>
+<script>
+    window.onload = function () {
+        //获得当月天数，隐藏多余天数，计算1的星期数，移动1的位置
+        //初始化页面
+        (function init(){
+            var date = new Date();
+            var year = document.querySelector('#year').value = date.getFullYear();
+            var month = document.querySelector('#month').value = date.getMonth()+1;
+            var dayNowIndex = date.getDate();
+
+            //根据当天的日期数，添加默认颜色
+            document.querySelector('ul.day-list').children[dayNowIndex-1].className = 'default';
+
+            getDate(year,month);
+        })()
+
+        //获得当月天数,返回当月天数,根据当月天数,隐藏多余天数，
+        function getDate(year,month) {
+            //获得第一个li
+            var dayOne = document.querySelectorAll('ul.day-list>li')[0];
+            //第1天的星期数
+            var weekdayNum = new Date(year,month-1,1).getDay();
+
+            //根据月份数判断当月天数
+            if(month == 2){
+                //如果是闰年
+                if((year % 4 === 0 && year % 100 !== 0)  || year % 400 === 0){
+                    days = 29;
+                    //如果是平年
+                }else{
+                    days = 28;
+                }
+            //如果是第4、6、9、11月
+            }else if(month == 4 || month == 6 ||month == 9 ||month == 11){
+                days = 30;
+            }else{
+                days = 31;
+            }
+
+            //根据当月天数，隐藏多余天数
+            for (var i = days; i < 31; i++) {
+                document.querySelector('ul.day-list').children[i].style.display = 'none';
+            }
+
+            //根据当月1号星期数移动位置
+            dayOne.style.marginLeft = 80*weekdayNum + 'px';
+        }
+    }
+</script>
+</body>
+</html>

@@ -13,7 +13,7 @@
             overflow: hidden;
         }
         .calender{
-            margin: 0 auto;
+            margin: 20px auto 0;
             width: 564px;
 
         }
@@ -43,8 +43,8 @@
 <div class="calender">
     <header>
         <form action="">
-            年：<input id="year" class="" type="number" min="1900" max="2100" step="1" value="2017">
-            月：<input id="month" class="" type="number" min="1" max="12" step="1" value="7">
+            年：<input id="year" class="" type="number" min="1900" max="2100" step="1">
+            月：<input id="month" class="" type="number" min="1" max="12" step="1">
         </form>
     </header>
     <section>
@@ -96,52 +96,103 @@
     </section>
 </div>
 <script>
-    window.onload = function () {
-        //获得当月天数，隐藏多余天数，计算1的星期数，移动1的位置
-        //初始化页面
-        (function init(){
-            var date = new Date();
-            var year = document.querySelector('#year').value = date.getFullYear();
-            var month = document.querySelector('#month').value = date.getMonth()+1;
-            var dayNowIndex = date.getDate();
+    /**
+     * 全局变量
+     */
+    var d = {
+        inputY: document.querySelector('#year'),
+        inputM: document.querySelector('#month'),
+        dateList: document.querySelector('ul.day-list').children,
+        dayOne: document.querySelectorAll('ul.day-list>li')[0]
+    };
 
-            //根据当天的日期数，添加默认颜色
-            document.querySelector('ul.day-list').children[dayNowIndex-1].className = 'default';
+    /**
+    * 2019/4/3
+    * 作者：苯苯有毒
+    * 功能：初始化日历
+    */
+    +(function init() {
+        //根据得到的年月渲染日历
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var dayIndex = date.getDate();
+        //第1天的星期数
+        var weekNum = new Date(year, month - 1, 1).getDay();
 
-            getDate(year,month);
-        })()
+        d.inputY.value = year;
+        d.inputM.value = month;
 
-        //获得当月天数,返回当月天数,根据当月天数,隐藏多余天数，
-        function getDate(year,month) {
-            //获得第一个li
-            var dayOne = document.querySelectorAll('ul.day-list>li')[0];
-            //第1天的星期数
-            var weekdayNum = new Date(year,month-1,1).getDay();
+        showDate(year, month, dayIndex, weekNum);
+    })();
 
-            //根据月份数判断当月天数
-            if(month == 2){
-                //如果是闰年
-                if((year % 4 === 0 && year % 100 !== 0)  || year % 400 === 0){
-                    days = 29;
-                    //如果是平年
-                }else{
-                    days = 28;
-                }
+
+    
+    /**
+     * 2019/4/3
+     * 作者：苯苯有毒
+     * 功能：根据年、月、日渲染日历，包括以下操作
+     * 1.根据年月获得当月天数       
+     * 2.根据当月天数隐藏多余天数     
+     * 3.根据当日为当月的第几天添加默认样式
+     * 4.根据当月1号的星期数整体移动日历
+     * @param year 年
+     * @param month
+     * @param dayIndex
+     * @param dayOne
+     * @param weekNum
+     */
+    function showDate(year, month, dayIndex, weekNum) {
+        // for (var i = 27; i < 31; i++) {
+        //     d.dateList[i].style.display = 'block';
+        // }
+
+        var days;
+        //1.根据年、月判断当月天数
+        if (month === '2') {
+            //如果是闰年
+            if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
+                days = 29;
+                //如果是平年
+            } else {
+                days = 28;
+            }
             //如果是第4、6、9、11月
-            }else if(month == 4 || month == 6 ||month == 9 ||month == 11){
-                days = 30;
-            }else{
-                days = 31;
-            }
-
-            //根据当月天数，隐藏多余天数
-            for (var i = days; i < 31; i++) {
-                document.querySelector('ul.day-list').children[i].style.display = 'none';
-            }
-
-            //根据当月1号星期数移动位置
-            dayOne.style.marginLeft = 80*weekdayNum + 'px';
+        } else if (month === '4' || month === '6' || month === '9' || month === '11') {
+            days = 30;
+        } else {
+            days = 31;
         }
+
+        //2.根据当月天数，隐藏多余天数
+        for (var i = days; i < 31; i++) {
+            d.dateList[i].style.display = 'none';
+        }
+
+        //3.根据当天的日期数，添加默认颜色
+        if (dayIndex) {
+            d.dateList[dayIndex - 1].className = 'default';
+        } else {
+            [].slice.call(d.dateList).forEach(function (item) {
+                item.className = '';
+            })
+        }
+
+        //4.根据当月1号星期数移动位置
+        d.dayOne.style.marginLeft = 80*weekNum + 'px';
+    }
+
+
+    d.inputY.addEventListener('change', renderCalender, false);
+    d.inputM.addEventListener('change', renderCalender, false);
+
+    function renderCalender() {
+        var year = d.inputY.value;
+        var month = d.inputM.value;
+        //第1天的星期数
+        var weekNum = new Date(year,month-1,1).getDay();
+
+        showDate(year, month, undefined, weekNum);
     }
 </script>
 </body>

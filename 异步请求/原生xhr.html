@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>参考文章：https://blog.csdn.net/sinat_35861727/article/details/78809986</p>
+<h2>ajax请求用户名的校验</h2>
+<p>用户名 : <input type="text" name="username" value="" onblur="f1()" /></p>
+<p>邮箱 : <input type="text" name="email" value="" /></p>
+<div id="result" style="color:green;"></div>
+<input type="button"  value="提交" onclick="f2()" />
+<script>
+    // get请求
+    function f1() {
+        console.log('start');
+
+        //1.创建一个Ajax对象
+        var xhr = new XMLHttpRequest();
+
+        //4.给对象绑定一个事件
+        xhr.onreadystatechange = function (ev) {
+            if(xhr.readyState == 4 && xhr.status == 200 ){
+                var msg = xhr.responseText;
+                console.log(msg);
+                //alert(msg);
+                var divtag = document.getElementById('result');
+                divtag.innerHTML = msg;
+            }else{
+
+            }
+        }
+
+        //2.创建请求，设置请求地址
+        var username = document.getElementsByTagName('input')[0].value;
+        var email = document.getElementsByTagName('input')[1].value;
+        username = encodeURIComponent(username);	//对值进行编码
+        email = encodeURIComponent(email);
+
+        xhr.open('get','response.php?username='+username+'&email='+email);
+
+        //3.发送请求(get--null    post--数据)
+        xhr.send(null);
+    }
+    //post请求
+    function f1(){
+        //console.log('start');
+        //1.创建AJAX对象
+        var xhr = new XMLHttpRequest();
+
+        //4.给AJAX设置事件(这里最多感知4[1-4]个状态)
+        xhr.onreadystatechange = function(){
+            //5.获取响应
+            //responseText		以字符串的形式接收服务器返回的信息
+            //console.log(xhr.readyState);
+            if(xhr.readyState == 4 && ajax.status == 200){
+                var msg = xhr.responseText;
+                console.log(msg);
+                //alert(msg);
+                var divtag = document.getElementById('result');
+                divtag.innerHTML = msg;
+            }
+        }
+
+        var username = document.getElementsByTagName('input')[0].value;
+        var email = document.getElementsByTagName('input')[1].value;
+        username = encodeURIComponent(username);	//对值进行编码
+        email = encodeURIComponent(email);
+
+        //2.创建http请求,并设置请求地址
+        xhr.open('post','response.php');
+
+        //3.发送请求(get--null    post--数据)
+        //post方式传递数据是模仿form表单传递给服务器的,要设置header头协议
+        xhr.setRequestHeader("content-type","application/x-www-form-urlencoded");
+        var info = 'username='+username+'&email='+email;	//将请求信息组成请求字符串
+
+        xhr.send(info);
+    }
+</script>
+</body>
+</html>

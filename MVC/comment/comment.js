@@ -11,26 +11,25 @@
                 view.addNewNote();
             },false);
 
-            var html ='';
-
-            control.getInitNotes().forEach(function (value) {
-                var text = '';
-                text += '<li>'+ value + '</li>';
-                html += text;
-            });
-            this.html = html;
             this.render();
-
         },
 
         addNewNote : function () {
-            this.html += '<li>' + control.getNewNote() + '</li>';
+            control.getNewNote();
             this.render();
         },
 
         render : function () {
             var ul = document.getElementById('notes');
-            ul.innerHTML = this.html;
+            var html = '';
+
+            control.getNotes().forEach(function (value) {
+                var text = '';
+                text += '<li>'+ value + '</li>';
+                html += text;
+            });
+
+            ul.innerHTML = html;
         }
     };
 
@@ -39,14 +38,13 @@
             view.init()
         },
 
-        getInitNotes : function () {
+        getNotes : function () {
             return data.notes;
         },
 
         getNewNote : function () {
             var inputValue = document.getElementById('new-note-content').value;
-
-            return inputValue;
+            data.notes.push(inputValue);
         }
 
     };

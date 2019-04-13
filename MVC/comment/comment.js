@@ -5,6 +5,12 @@
 
     var view = {
         init:function () {
+            var button = document.getElementById('submit');
+
+            button.addEventListener('click',function () {
+                view.addNewNote();
+            },false);
+
             var html ='';
 
             control.getInitNotes().forEach(function (value) {
@@ -14,7 +20,7 @@
             });
             this.html = html;
             this.render();
-            control.submitNewNote();
+
         },
 
         addNewNote : function () {
@@ -26,7 +32,6 @@
             var ul = document.getElementById('notes');
             ul.innerHTML = this.html;
         }
-
     };
 
     var control = {
@@ -42,13 +47,6 @@
             var inputValue = document.getElementById('new-note-content').value;
 
             return inputValue;
-        },
-
-        submitNewNote : function () {
-            var button = document.getElementById('submit');
-            button.addEventListener('click',function () {
-                view.addNewNote();
-            },false)
         }
 
     };

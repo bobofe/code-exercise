@@ -1,31 +1,35 @@
+/**
+ * skdfksdjfljsdf
+ */
 (function () {
     var data = {
-        notes : [1,2,3]
+        notes: [1, 2, 3]
     };
 
     var view = {
-        init:function () {
+        // 初始化
+        init: function () {
             var button = document.getElementById('submit');
 
-            button.addEventListener('click',function () {
+            button.addEventListener('click', function () {
                 view.addNewNote();
-            },false);
+            }, false);
 
             this.render();
         },
 
-        addNewNote : function () {
+        addNewNote: function () {
             control.getNewNote();
             this.render();
         },
 
-        render : function () {
+        render: function () {
             var ul = document.getElementById('notes');
             var html = '';
 
             control.getNotes().forEach(function (value) {
                 var text = '';
-                text += '<li>'+ value + '</li>';
+                text += '<li>' + value + '</li>';
                 html += text;
             });
 
@@ -34,20 +38,20 @@
     };
 
     var control = {
-        init : function () {
-            view.init()
+        init: function () {
+            view.init();
         },
 
-        getNotes : function () {
+        getNotes: function () {
             return data.notes;
         },
 
-        getNewNote : function () {
+        getNewNote: function () {
             var inputValue = document.getElementById('new-note-content').value;
             data.notes.push(inputValue);
         }
-
     };
 
-    control.init()
+    control.init();
+
 })(window);

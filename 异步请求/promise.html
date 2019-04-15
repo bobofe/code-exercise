@@ -5,6 +5,195 @@
     <title>Title</title>
 </head>
 <body>
+<h1>Did the promise finish?</h1>
+<div class="completion">Not yet</div>
+<script>
+    //例1：promise练习1
+    function wait(ms) {
+        /*
+        Instructions:
+        (1) Wrap this setTimeout in a Promise. resolve() in setTimeout's callback.
+        (2) console.log(this) inside the Promise and observe the results.
+        (3) Make sure wait returns the Promise too!
+         */
 
+        var promise = new Promise(function (resolve) {
+            console.log(this);
+            //this指向window
+            window.setTimeout(function() {
+                var value = '1';
+                resolve(value);
+            }, ms);
+        });
+
+        return promise;
+    };
+
+    /*
+    Uncomment these lines when you want to test!
+    You'll know you've done it right when the message on the page changes.
+     */
+    var milliseconds = 2000;
+    wait(milliseconds).then(finish);
+
+
+    // This is just here to help you test.
+    function finish(value) {
+        console.log(value)
+        var completion = document.querySelector('.completion');
+        completion.innerHTML = "Complete after " + milliseconds + "ms.";
+    };
+
+
+    //例2：异步加载图片
+    //onload 事件会在页面或图像加载完成后立即发生。
+    function loadImageAsync(url) {
+        return new Promise(function(resolve, reject) {
+            const image = new Image();
+
+            image.onload = function() {
+                resolve(image);
+            };
+
+            image.onerror = function() {
+                reject(new Error('Could not load image at ' + url));
+            };
+
+            image.src = url;
+        });
+    }
+
+    //例3：Promise对象实现的 Ajax 操作
+    const getJSON = function(url) {
+        const promise = new Promise(function(resolve, reject){
+            const handler = function() {
+                if (this.readyState !== 4) {
+                    return;
+                }
+                if (this.status === 200) {
+                    resolve(this.responseText);
+                } else {
+                    reject(new Error(this.statusText));
+                }
+            };
+            const client = new XMLHttpRequest();
+            client.open("GET", url);
+            client.onreadystatechange = handler;
+            client.responseType = "json";
+            //设置自定义的请求头信息，必须在open()之后，send()之前
+            client.setRequestHeader("Accept", "application/json");
+            client.send(null);
+
+        });
+
+        return promise;
+    };
+
+    getJSON("/posts.json").then(function(json) {
+        console.log('Contents: ' + json);
+    }, function(error) {
+        console.error('出错了', error);
+    });
+
+    //例4：通过回调方式来进行多个异步调用
+    function getURLCallback(URL, callback) {
+        var req = new XMLHttpRequest();
+        req.open('GET', URL, true);
+        req.onload = function () {
+            if (req.status === 200) {
+                callback(null, req.responseText);
+            } else {
+                callback(new Error(req.statusText), req.response);
+            }
+        };
+        req.onerror = function () {
+            callback(new Error(req.statusText));
+        };
+        req.send();
+    }
+    // <1> 对JSON数据进行安全的解析
+    function jsonParse(callback, error, value) {
+        if (error) {
+            callback(error, value);
+        } else {
+            try {
+                var result = JSON.parse(value);
+                callback(null, result);
+            } catch (e) {
+                callback(e, value);
+            }
+        }
+    }
+    // <2> 发送XHR请求
+    var request = {
+        comment: function getComment(callback) {
+            return getURLCallback('http://azu.github.io/promises-book/json/comment.json', jsonParse.bind(null, callback));
+        },
+        people: function getPeople(callback) {
+            return getURLCallback('http://azu.github.io/promises-book/json/people.json', jsonParse.bind(null, callback));
+        }
+    };
+    // <3> 启动多个XHR请求，当所有请求返回时调用callback
+    function allRequest(requests, callback, results) {
+        if (requests.length === 0) {
+            return callback(null, results);
+        }
+        var req = requests.shift();
+        req(function (error, value) {
+            if (error) {
+                callback(error, value);
+            } else {
+                results.push(value);
+                allRequest(requests, callback, results);
+            }
+        });
+    }
+    function main(callback) {
+        allRequest([request.comment, request.people], callback, []);
+    }
+    // 运行的例子
+    main(function(error, results){
+        if(error){
+            return console.error(error);
+        }
+        console.log(results);
+    });
+
+    //promise写法：
+    function getURL(URL) {
+        return new Promise(function (resolve, reject) {
+            var req = new XMLHttpRequest();
+            req.open('GET', URL, true);
+            req.onload = function () {
+                if (req.status === 200) {
+                    resolve(req.responseText);
+                } else {
+                    reject(new Error(req.statusText));
+                }
+            };
+            req.onerror = function () {
+                reject(new Error(req.statusText));
+            };
+            req.send();
+        });
+    }
+    var request = {
+        comment: function getComment() {
+            return getURL('http://azu.github.io/promises-book/json/comment.json').then(JSON.parse);
+        },
+        people: function getPeople() {
+            return getURL('http://azu.github.io/promises-book/json/people.json').then(JSON.parse);
+        }
+    };
+    function main() {
+        return Promise.all([request.comment(), request.people()]);
+    }
+    // 运行示例
+    main().then(function (value) {
+        console.log(value);
+    }).catch(function(error){
+        console.log(error);
+    });
+</script>
 </body>
 </html>

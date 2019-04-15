@@ -1,4 +1,4 @@
-## 思路
+## 基础功能思路
 点击按钮，将input框的内容添加到ul下的li中
 
 1、数据和view之间不产生直接关系
@@ -29,6 +29,36 @@ view.init中主要是获取元素，不执行DOM操作,DOM操作在render中完�
 4、页面刷新问题
 直接给button绑定事件会触发表单提交，导致重新刷新页面
 解决：给button加上type="button"即可。
+
+## 优化思路
+
+MVC：
+
++ M：model——数据模型，包括来自服务器和自来用户的数据
++ V：view——视图，包括一切DOM元素
++ C：control——控制器
+
+数据部分model
+
+①**init(initNotes)**
+
+将数据存储在一个数组中：[]
+
+因为localstorage只能操作string类型的存储，所以需要对[]进行序列化;
+
+**向localStorage中存储操作string，更改[]中的数据操作JSON**
+
+localstorage.setItem("notes","[]");或localstorage.notes = JSON.stringify([]);
+
+逻辑：如果localstorage.note无值，初始化localstorage.setItem("notes","[]");
+
+②**set(addNote)**
+
+③**getAll(AllNotes)**
+
+
+
+
 
 
 

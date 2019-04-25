@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>offset属性</title>
+    <style>
+        body {
+            border:20px solid #CCC;
+            margin:10px;
+            padding:40px;
+            background:#EEE;
+        }
+        #test {
+            width:400px;
+            height:200px;
+            padding:20px;
+            background:#F60;
+            border:5px solid #888;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div id="test"></div>
+<script>
+    var test = document.getElementById("test");
+    test.innerHTML = "<p>Browser:" + navigator.userAgent + "</p>" +
+        "<p>offsetWidth:" + test.offsetWidth + ' = 400 + 20*2 + 5*2' + "</p>" +
+        "<p>offsetHeight:"+test.offsetHeight+' = 200 + 20*2 + 5*2' +"</p>"+
+        "<p>offsetLeft:"+test.offsetLeft+ ' = 10 + 20 + 40' + "</p>"+
+        "<p>offsetTop:"+test.offsetTop+ ' = 10 + 20 + 40 ' + "</p>"+
+        "<p>offsetParent:"+test.offsetParent+"</p>";
+
+</script>
+</body>
+</html>

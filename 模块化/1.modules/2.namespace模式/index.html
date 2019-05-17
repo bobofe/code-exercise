@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="text/javascript" src="module1.js"></script>
+<script type="text/javascript" src="module2.js"></script>
+<script type="text/javascript">
+    myModule1.foo()
+    myModule1.bar()
+    myModule2.foo()
+    myModule2.bar()
+    myModule1.data = 'other data'   //能在外部直接修改模块内部的数据
+    myModule1.foo()
+</script>
+</body>
+</html>

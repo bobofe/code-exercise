@@ -2,9 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <title>layui练习</title>
+    <link rel="stylesheet" href="public/css/layui.css">
+    <style>
+        div{
+            width: 200px;
+            height: 200px;
+            background: #000;
+        }
+    </style>
 </head>
 <body>
+<div id="test"></div>
+<!--模块化写法，引入layui.js-->
+<script src="public/layui.js"></script>
+<script>
+    var div = document.getElementById('test');
 
+    // 导入使用的模块，在这里执行一次，后面就可以找到
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer;
+        layer.msg('hello');
+    })
+</script>
 </body>
 </html>

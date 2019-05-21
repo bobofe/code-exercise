@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三种方法获得鼠标的位置信息</title>
+</head>
+<body>
+<script>
+    window.onload = function () {
+
+        // 获取到屏幕的距离
+        document.onclick = function getMousePos1(e) {
+            var e = event || window.event;
+            return {'x':e.screenX,'y':screenY}
+        }
+
+        // 获取到浏览器的距离
+
+        document.onclick = function getMousePos2 (e) {
+            var e = event || window.event;
+            return {'x':e.clientX,'y':clientY}
+        }
+
+        // 获取到文档的距离
+        document.onclick = function getMousePos3 (e) {
+            var e = event || window.event;
+            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+            var x = e.pageX || e.clientX + scrollX;
+            var y = e.pageY || e.clientY + scrollY;
+            return { 'x': x, 'y': y };
+        }
+
+    }
+</script>
+</body>
+</html>

@@ -1,3 +1,4 @@
-1.getBoundingClientReact()
+1.getBoundingClientRect()
 
-2.防抖
+2.获得鼠标的位置信息
+

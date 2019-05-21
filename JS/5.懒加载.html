@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>懒加载也叫延迟加载，指的是在长网页中延迟加载图像，是一种很好优化网页性能的方式。用户滚动到它们之前，可视区域外的图像不会加载。这与图像预加载相反，在长网页上使用延迟加载将使网页加载更快。在某些情况下，它还可以帮助减少服务器负载。常适用图片很多，页面很长的电商网站场景中。</p>
+<p>懒加载原理：</p>
+<ul>
+    <li>将页面上的图片的 src 属性设为空字符串，而图片的真实路径则设置在data-original属性中</li>
+    <li>当页面滚动的时候需要去监听scroll事件,在scroll事件的回调中，判断我们的懒加载的图片是否进入可视区域
+        <ul>
+            <li>如果图片在可视区内,将图片的 src 属性设置为data-original 的值,这样就可以实现延迟加载。</li>
+            <li>如果图片不在可视区不做处理</li>
+        </ul>
+    </li>
+</ul>
+<!--这里只是一个占位图片，不是实际的图片-->
+<img src="" class="image-item" lazyload="true"  data-original="images/1.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/2.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/3.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/4.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/5.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/6.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/7.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/8.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/9.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/10.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/11.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/12.png"/>
+<script>
+
+    // 实例一：比较好
+    //获取可视区高度
+    var viewHeight =document.documentElement.clientHeight;
+
+    // 绑定到document对象上，和获得鼠标位置的点击事件相同
+    document.addEventListener("scroll",lazyload)
+
+    function lazyload(){
+        var eles=document.querySelectorAll('img[data-original][lazyload]');
+
+        // 给eles执行forEach函数，elses是个类数组对象，本身不能直接调用数组方法，这里用了借用方法，见类数组对象转数组
+		Array.prototype.forEach.call(eles,function(item,index){
+            var rect;
+            // 如果item.dataset.original===""，说明图片已经加载过了
+            if(item.dataset.original===""){
+                return;
+            }
+
+            // 获得元素相对于浏览器视窗的位置信息，包括width，height，top，left，bottom，right，x，y
+            rect=item.getBoundingClientRect();
+
+            // 如果占位图片的底边>=0,说明图片还没有向上移除视窗
+            // 如果占位图片的上边<可视区高度，说明图片还没有向下移除视窗
+            // 总结：图片刚好出现在视窗范围内
+            if(rect.bottom> 0 && rect.top < viewHeight){
+                // 将已经请求到浏览器的图片加载出来
+                !function(){
+                    var img=new Image()
+                    img.src=item.dataset.original
+                    // 当图片加载完成后执行
+                    img.onload=function(){
+                        item.src=img.src
+                    }
+                    item.removeAttribute("data-original")//移除属性，下次不再遍历
+                    item.removeAttribute("lazyload")
+                }()
+            }
+        })
+    }
+    lazyload()//刚开始还没滚动屏幕时，要先触发一次函数，初始化首页的页面图片
+</script>
+<script>
+    // <img src="default.jpg"
+    //      data-src="http://ww4.sinaimg.cn/large/006y8mN6gw1fa5obmqrmvj305k05k3yh.jpg"
+    //      alt="">
+    // 实例二：不如第一种
+    var num = document.getElementsByTagName('img').length;
+    var img = document.getElementsByTagName("img");
+    var n = 0; //存储图片加载到的位置，避免每次都从第一张图片开始遍历
+    lazyload(); //页面载入完毕加载可是区域内的图片
+    window.onscroll = lazyload;
+    function lazyload() { //监听页面滚动事件
+        var seeHeight = document.documentElement.clientHeight; //可见区域高度
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部高度
+        for (var i = n; i < num; i++) {
+            if (img[i].offsetTop < seeHeight + scrollTop) {
+                if (img[i].getAttribute("src") == "default.jpg") {
+                    img[i].src = img[i].getAttribute("data-src");
+                }
+                n = i + 1;
+            }
+        }
+    }
+</script>
+<script>
+    // <img src="default.jpg"
+    //      data-src="http://ww4.sinaimg.cn/large/006y8mN6gw1fa5obmqrmvj305k05k3yh.jpg"
+    //      alt="">
+    // 实例三：加了节流的懒加载
+    /**
+     * 使用节流函数进行性能优化
+     如果直接将函数绑定在scroll事件上，当页面滚动时，函数会被高频触发，这非常影响浏览器的性能。
+     我想实现限制触发频率，来优化性能。
+     节流函数：只允许一个函数在N秒内执行一次。下面是一个简单的节流函数：
+     * fun： 要执行的函数
+     * delay： 延迟
+     * time：  在time时间内必须执行一次
+     */
+
+    function throttle(fun, delay, time) {
+        var timeout,
+            startTime = new Date();
+        return function() {
+            var context = this,
+                args = arguments,
+                curTime = new Date();
+            clearTimeout(timeout);
+            // 如果达到了规定的触发时间间隔，触发 handler
+            if (curTime - startTime >= time) {
+                fun.apply(context, args);
+                startTime = curTime;
+                // 没达到触发间隔，重新设定定时器
+            } else {
+                timeout = setTimeout(fun, delay);
+            }
+        };
+    };
+    // 实际想绑定在 scroll 事件上的 handler
+    function lazyload(event) {
+        for (var i = n; i < imgNum; i++) {
+            if (img.eq(i).offset().top < parseInt($(window).height()) + parseInt($(window).scrollTop())) {
+                if (img.eq(i).attr("src") == "default.jpg") {
+                    var src = img.eq(i).attr("data-src");
+                    img.eq(i).attr("src", src);
+                    n = i + 1;
+                }
+            }
+        }
+    }
+    // 采用了节流函数
+    window.addEventListener('scroll',throttle(lazyload,500,1000));
+
+</script>
+</body>
+</html>

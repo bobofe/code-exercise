@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #app{
+            width: 300px;
+            height: 200px;
+            border:1px solid red ;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+<img src="images/getBoundingClientReac.png" alt="">
+<script>
+    window.onload = function () {
+        var rec = document.getElementById('app');
+        var o = rec.getBoundingClientRect();
+        console.log(o);
+
+        //width和height只有IE9才有，所以兼容性写法如下：
+        //兼容所有浏览器写法：
+        var Top = o.top;
+        var Bottom = o.bottom;
+        var Left = o.left;
+        var Right = o.right;
+        var Width = o.width||Right - Left;
+        var Height = o.height||Bottom - Top;
+        console.log(Top,Left,Bottom,Right,Width,Height);
+
+        //获取元素在页面中的位置信息，根据上一个o对象来看，现在这个对象已经内置了x和y属性，
+        var X= o.left+document.documentElement.scrollLeft;
+        var Y = o.top+document.documentElement.scrollTop;
+        console.log(X,Y)
+    }
+</script>
+</body>
+</html>

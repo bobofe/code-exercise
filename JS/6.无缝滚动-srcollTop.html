@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>无缝滚动——轮播图和跑马灯效果</title>
+    <style>
+        .box {
+            margin: 50px auto;
+            padding: 10px;
+            width: 150px;
+            height: 35px;
+            line-height: 35px;
+            border: 1px dashed red;
+            background: lightgoldenrodyellow;
+        }
+
+        .wrap {
+            white-space: nowrap;
+            height: 35px;
+            overflow: hidden;
+        }
+
+        .wrap span {
+            color: #ff4343;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .start, .end {
+            display: inline-block;
+        }
+
+
+        /*示例2代码*/
+        ul{margin: 0;padding: 0;}
+        .content{width: 500px;height: 300px;margin: 100px auto;background: cyan;}
+        #marquee{width: 300px;height:300px;margin:0 auto;background: yellow;overflow: hidden;}
+        #marquee ul{width: 100%;}
+        #marquee ul li{width: 100%;list-style:none; height: 30px;margin: 10px 0 0 0;background: red;float: left;}
+    </style>
+</head>
+<body>
+<p>无缝滚动主要是针对图片和文字的滚动，可以用来做轮播图和跑马灯效果</p>
+<p>marquee:跑马灯</p>
+<p>
+    实现的无缝滚动，有两种基本的思想：<br>
+    第一种：通过父元素的scrollLeft逐渐增加来实现；<br>
+    第二种：通过css3的translate来实现
+</p>
+
+<!--实例一：水平跑马灯效果-->
+<!--<div id="box" class="box">-->
+    <!--<div id="wrap" class="wrap">-->
+        <!--<div id="start" class="start">-->
+            <!--<span>告示：</span>我是跑马灯 我是跑马灯  我是跑马灯  我是跑马灯-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+ 这是跑马灯update
+<div id="box" class="box">
+    <div id="wrap" class="wrap">
+        <div id="start" class="start">
+            <span>告示：</span>我是跑马灯 我是跑马灯  我是跑马灯  我是跑马灯
+        </div>
+        <div id="end" class="end">
+            <span>告示：</span>我是跑马灯 我是跑马灯  我是跑马灯  我是跑马灯
+        </div>
+    </div>
+</div>
+
+<!--实例二：改进版-->
+<div class="content">
+    <div id="marquee">
+        <ul id="ul01">
+            <li>无缝滚动的原理：</li>
+            <li>1：scrollTop.scrollTop指的是“元素中的内</li>
+            <li>容”超出“元素上边界”的那部分的高度。</li>
+            <li>2:复制第一个ul里的元素到第二个ul里</li>
+            <li>innerHTML,获取标签里面的代码</li>
+            <li>3：判断滚动的距离，回到最初的位置</li>
+            <li>4：setInterval，间隔执行，</li>
+            <li>css属性：overflow：hidden</li>
+            <li>隐式溢出隐藏</li>
+            <li>----------------end---------------</li>
+        </ul>
+        <ul id="ul02"></ul>
+    </div>
+</div>
+<script>
+    // 方法一：
+    // var wrap = document.getElementById('wrap');
+    // var start = document.getElementById('start');
+    // var end = document.getElementById('end');
+    // var timer = setInterval(function () {
+    //     var curLeft = wrap.scrollLeft;
+    //     wrap.scrollLeft = curLeft + 10;
+    //     var newLeft = wrap.scrollLeft;
+    //     // 当滚动条滚动到最右边，即：内容到达最左边时候停止
+    //     if (curLeft === newLeft) { // 利用scrollLeft存在边界值，若累加前和累加后的值相等，就可以判断已经达到最大值
+    //         wrap.scrollLeft = 0;
+    //     }
+    // }, 100)
+</script>
+<script>
+    // 方法二：
+    var box = document.getElementById('box');
+    var wrap = document.getElementById('wrap');
+    var start = document.getElementById('start');
+    var startWidth = getStyle(start, 'width');
+
+    function move() {
+        wrap.scrollLeft++;
+        // 这里有两个div，所以当wrap.scrollLeft >= startWidth时
+        // 当第一个div完全移动到框外，视图区为第二个div，此时再移#回到第一个div
+        if (wrap.scrollLeft >= startWidth) {
+            wrap.scrollLeft = 0;
+        }
+    }
+    var timer = window.setInterval(move, 10);
+    box.onmouseover = function () {
+        window.clearInterval(timer);
+    };
+    box.onmouseout = function () {
+        timer = window.setInterval(move, 10);
+    };
+
+    // 获取css的值
+    function getStyle(ele, attr) {
+        var val = null, reg = null;
+        if (window.getComputedStyle) {
+            val = window.getComputedStyle(ele, null)[attr];
+        } else {
+            val = ele.currentStyle[attr];
+        }
+        reg = /^(-?\d+(\.\d+)?)(px|pt|rem|em)?$/i; // 正则匹配单位,若带有px等单位，将单位剔除掉
+        return reg.test(val) ? parseFloat(val) : val;
+    }
+</script>
+<script>
+    var area = document.getElementById('marquee');//滚动区域
+    var con1 = document.getElementById("ul01");
+    var con2 = document.getElementById("ul02");
+    var time=10;//滚动速度
+
+    con2.innerHTML=con1.innerHTML;
+
+    function Top(){//滚动方法
+        if (area.scrollTop>=con1.scrollHeight) {//当滚动的距离大于等于ul的高度时，把它的位置归到初始化
+            area.scrollTop=0;
+        }else{
+            area.scrollTop++;
+        }
+    }
+
+    var auto=setInterval("Top()",time);
+
+    area.onmouseover=function() {
+        // body...
+        clearInterval(auto);
+    }
+    area.onmouseout=function() {
+        // body...
+        auto=setInterval("Top()",time);
+    }
+</script>
+</body>
+</html>

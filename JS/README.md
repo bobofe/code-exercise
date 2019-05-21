@@ -51,14 +51,29 @@ Array.prototype.push.call(foo, 'PHP');
 
 **call，apply，bind的本质是给对象添加一个新的方法，让这个对象能够调用这个方法**
 
-#### 6.无缝滚动
+#### 6.无缝滚动——scrollTop/srollLeft
 
-(1)跑马灯
+element.scrollLeft;滚动条到元素左边的距离
 
-**方法1：当滚动到末尾，将scrollLeft设为0**
+实现的无缝滚动，有两种基本的思想：
+第一种：通过父元素的scrollLeft/scrollTop逐渐增加来实现；
+第二种：通过css3的translate来实现，这里采用的第二种；
 
-这种方法存在的问题：不连续，公告两字就在开头出现，有临界处有闪动
+滚动动画实现：主要运用animation动画：
 
+```
+    @keyframes move{
+		0%{transform:translateX(0px);}
+		100%{transform:translateX(-2400px);}
+    }
+```
 
+这里100%的时候移动的距离是你一次性想要展示的所有图片的宽度，并不是ul的宽度；
 
-(2)无缝轮播
+(1)方法一：当滚动到末尾，将scrollLeft设为0
+
+(2)方法二：利用两个内容相同的div，当第一个div消失，立即让第一个div的scrollLeft为0，由于有第二个一模一样的内容，所以看起来是连续的
+
+这里有两个div，所以当wrap.scrollLeft >= startWidth时，第一个div完全移动到框外，视图区为第二个div，此时再移#回到第一个div
+
+(3)实例三在实例二的基础上进行了部分改进，原理相同

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图练习</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            list-style: none;
+        }
+        img{
+            vertical-align: top;
+        }
+        .container{
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto;
+            text-align: center;
+            font-size: 0;
+        }
+        .container:hover span.arrow-pre,.container:hover span.arrow-next{
+            background-color: rgba(255,255,255,.5);
+        }
+        .pics{
+            position: absolute;
+            top: 0;
+            left: -500px;       /* 图片的宽度为500px,将第一张图片移出去 */
+            /*z-index: 1;*/
+            width: 3500px;
+            height: 200px;
+            overflow: hidden;    /*清除浮动*/
+            zoom: 1;
+        }
+        .pics a{
+            float: left;
+        }
+
+        ul{
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 140px;
+            margin-left: -70px;
+        }
+
+        ul li{
+            float: left;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #fff;
+            border-radius: 10px;
+            margin-right: 10px;
+            line-height: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        ul li.current{
+            background-color: red;
+        }
+
+        span.arrow-pre,span.arrow-next{
+            width: 30px;
+            height: 50px;
+            font-size: 30px;
+            line-height: 50px;
+            background-color: rgba(255,255,255,.3);
+            position: absolute;
+            top: 50%;
+            margin-top: -25px;
+            cursor: pointer;
+        }
+        span.arrow-pre{
+            left: 10px;
+        }
+        span.arrow-next{
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="pics" id="pics">
+        <a href="http://www.baidu.com"><img src="images/5.jpg" alt=""></a>
+        <a href="http://www.baidu.com"><img src="images/1.jpg" alt=""></a>
+        <a href="http://www.baidu.com"><img src="images/2.jpg" alt=""></a>
+        <a href="http://www.baidu.com"><img src="images/3.jpg" alt=""></a>
+        <a href="http://www.baidu.com"><img src="images/4.jpg" alt=""></a>
+        <a href="http://www.baidu.com"><img src="images/5.jpg" alt=""></a>
+        <a href="http://www.baidu.com"><img src="images/1.jpg" alt=""></a>
+    </div>
+    <ul id="lists">
+        <li class="current">1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+    </ul>
+    <span class="arrow-pre" id="arrow_pre">&lt;</span>
+    <span class="arrow-next" id="arrow_next">&gt;</span>
+</div>
+<script>
+    window.onload = function (ev) {
+        var container = document.querySelector('.container');
+        var lists_wrap = document.getElementById('lists');
+        var arrow_pre = document.getElementById('arrow_pre');
+        var arrow_next = document.getElementById('arrow_next');
+        var pics = document.getElementById('pics');
+
+        // lists_obj 为类数组对象
+        var lists_obj = lists_wrap.children;
+        // 将类数组对象转为数组,也可以不转化，用call强制调用
+        var lists_arr = Array.prototype.slice.call(lists_obj);
+
+        /**
+         * 要实现的功能：
+         * 1.点击左右，图片向右左移动——left减去/加上500px
+         * 2.点击页码，跳到相应的图片——根据序号计算left值
+         * 3.无任何操作时，按顺序自动播放图片——定时器
+         * 4.鼠标移动到container时，图片停止自动播放——清除定时器
+         * */
+
+         /**
+          * 实现原理：根据相应的操作，调整图片容器的定位属性left
+          * */
+
+         /**
+          * @file 改变图片容器left值的函数animate
+          * @author
+          * @param {string} step 容器left移动的步长
+          * @return {Object} 返回值描述
+          * */
+        function animate(step) {
+            // 图片容器的初始left值，开始为-500px
+            var current_left = getComputedStyle(pics).left;
+            //
+            var left = parseInt(current_left) + step;
+
+            pic_move(left);
+            update_circle();
+        }
+
+        /**
+         * @file 根据当前图片的index给对应页码添加样式的函数
+         * @author
+         * */
+        function update_circle() {
+
+            //下面这段代码用来实现图片和页码匹配
+            // 获得新的移动后的新的left值，计算出当前为第n章图片
+            var new_left = getComputedStyle(pics).left;
+
+            // 图片的index从0开始，这里计算后要-1
+            var index = -parseInt(new_left)/500-1;
+
+            // 清空所有页码的class值，给当前图片对应的页码，添加class为current
+            lists_arr.forEach(function (ele,index,arr) {
+                ele.className = '';
+            });
+
+            lists_arr[index].className = 'current';
+        }
+
+        /**
+         * @file 点击页码切换到相应图片的函数，这是一个立即执行的函数
+         * @author
+         * */
+        ;(function() {
+            for(let index in lists_arr) {
+
+                // 给页码加click事件，点击时
+                lists_arr[index].addEventListener('click',function (event) {
+                    event.stopPropagation();
+
+                    // 先清空所有页码的class，给当前添加的页码添加样式
+                    lists_arr.forEach(function (ele,index,arr) {
+                        ele.className = '';
+                    });
+
+                    this.className = 'current';
+
+                    // 根据当前页码的index值，计算出当前图片容器的left值
+                    var left = -(parseInt(index)+1)*500;
+
+                    pic_move(left);
+                },false)
+            }
+        })()
+
+        /**
+         * @file 这是控制图片的函数
+         * @author
+         * @param { number } left 图片容器的实时left值
+         * */
+        function pic_move(left) {
+            // 这段代码用来实现左右箭头切换图片和点击页码切换图片
+            // 如果left>-500,说明第一张图片5正在向右移动，此时，将5放到框内
+            // 如果left<-3000,说明最后一张图片1正在向左移动，此时，将1放到框内
+            // 如果left>-500&&<-3000,说明此时在1-5的某张图片中，加上或减去步长即可
+            if(left > -500) {
+                pics.style.left = -2500 + 'px';
+            }else if(left>-3000) {
+                pics.style.left = left + 'px';
+            }
+            else {
+                pics.style.left = -500 + 'px';
+            }
+        }
+
+
+        // 点击左箭头，图片容器向右移动，left值增大，步长为正值
+        arrow_pre.onclick = function (e) {
+            animate(500);
+        };
+
+        // 点击右箭头，图片容器向坐移动，left值增大，步长为正值
+        arrow_next.onclick =function (e) {
+            animate(-500);
+        }
+
+        // 图片自动轮播——定时器
+        var timer = setInterval(() => {
+            animate(-500);
+        },1000)
+
+        // 鼠标移入轮播停止
+        container.onmouseover = function () {
+            clearInterval(timer);
+        }
+
+        // 鼠标移出，再次开始自动轮播
+        container.onmouseout = function () {
+            timer = setInterval(() => {
+                animate(-500);
+            },1000)
+        }
+
+    }
+</script>
+</body>
+</html>

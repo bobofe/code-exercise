@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <title>轮播图练习</title>
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
             text-decoration: none;
             list-style: none;
         }
-        img{
+
+        img {
             vertical-align: top;
         }
-        .container{
+
+        .container {
             width: 500px;
             height: 200px;
             overflow: hidden;
@@ -22,24 +24,27 @@
             text-align: center;
             font-size: 0;
         }
-        .container:hover span.arrow-pre,.container:hover span.arrow-next{
-            background-color: rgba(255,255,255,.5);
+
+        .container:hover span.arrow-pre, .container:hover span.arrow-next {
+            background-color: rgba(255, 255, 255, .5);
         }
-        .pics{
+
+        .pics {
             position: absolute;
             top: 0;
-            left: -500px;       /* 图片的宽度为500px,将第一张图片移出去 */
+            left: -500px; /* 图片的宽度为500px,将第一张图片移出去 */
             /*z-index: 1;*/
             width: 3500px;
             height: 200px;
-            overflow: hidden;    /*清除浮动*/
+            overflow: hidden; /*清除浮动*/
             zoom: 1;
         }
-        .pics a{
+
+        .pics a {
             float: left;
         }
 
-        ul{
+        ul {
             position: absolute;
             bottom: 10px;
             left: 50%;
@@ -47,7 +52,7 @@
             margin-left: -70px;
         }
 
-        ul li{
+        ul li {
             float: left;
             width: 16px;
             height: 16px;
@@ -60,25 +65,27 @@
             color: #fff;
         }
 
-        ul li.current{
+        ul li.current {
             background-color: red;
         }
 
-        span.arrow-pre,span.arrow-next{
+        span.arrow-pre, span.arrow-next {
             width: 30px;
             height: 50px;
             font-size: 30px;
             line-height: 50px;
-            background-color: rgba(255,255,255,.3);
+            background-color: rgba(255, 255, 255, .3);
             position: absolute;
             top: 50%;
             margin-top: -25px;
             cursor: pointer;
         }
-        span.arrow-pre{
+
+        span.arrow-pre {
             left: 10px;
         }
-        span.arrow-next{
+
+        span.arrow-next {
             right: 10px;
         }
     </style>
@@ -125,16 +132,16 @@
          * 4.鼠标移动到container时，图片停止自动播放——清除定时器
          * */
 
-         /**
-          * 实现原理：根据相应的操作，调整图片容器的定位属性left
-          * */
+        /**
+         * 实现原理：根据相应的操作，调整图片容器的定位属性left
+         * */
 
-         /**
-          * @file 改变图片容器left值的函数animate
-          * @author
-          * @param {string} step 容器left移动的步长
-          * @return {Object} 返回值描述
-          * */
+        /**
+         * @file 改变图片容器left值的函数animate
+         * @author
+         * @param {string} step 容器left移动的步长
+         * @return {Object} 返回值描述
+         * */
         function animate(step) {
             // 图片容器的初始left值，开始为-500px
             var current_left = getComputedStyle(pics).left;
@@ -156,10 +163,10 @@
             var new_left = getComputedStyle(pics).left;
 
             // 图片的index从0开始，这里计算后要-1
-            var index = -parseInt(new_left)/500-1;
+            var index = -parseInt(new_left) / 500 - 1;
 
             // 清空所有页码的class值，给当前图片对应的页码，添加class为current
-            lists_arr.forEach(function (ele,index,arr) {
+            lists_arr.forEach(function (ele, index, arr) {
                 ele.className = '';
             });
 
@@ -170,25 +177,25 @@
          * @file 点击页码切换到相应图片的函数，这是一个立即执行的函数
          * @author
          * */
-        ;(function() {
-            for(let index in lists_arr) {
+        ;(function () {
+            for (let index in lists_arr) {
 
                 // 给页码加click事件，点击时
-                lists_arr[index].addEventListener('click',function (event) {
+                lists_arr[index].addEventListener('click', function (event) {
                     event.stopPropagation();
 
                     // 先清空所有页码的class，给当前添加的页码添加样式
-                    lists_arr.forEach(function (ele,index,arr) {
+                    lists_arr.forEach(function (ele, index, arr) {
                         ele.className = '';
                     });
 
                     this.className = 'current';
 
                     // 根据当前页码的index值，计算出当前图片容器的left值
-                    var left = -(parseInt(index)+1)*500;
+                    var left = -(parseInt(index) + 1) * 500;
 
                     pic_move(left);
-                },false)
+                }, false)
             }
         })()
 
@@ -202,12 +209,11 @@
             // 如果left>-500,说明第一张图片5正在向右移动，此时，将5放到框内
             // 如果left<-3000,说明最后一张图片1正在向左移动，此时，将1放到框内
             // 如果left>-500&&<-3000,说明此时在1-5的某张图片中，加上或减去步长即可
-            if(left > -500) {
+            if (left > -500) {
                 pics.style.left = -2500 + 'px';
-            }else if(left>-3000) {
+            } else if (left > -3000) {
                 pics.style.left = left + 'px';
-            }
-            else {
+            } else {
                 pics.style.left = -500 + 'px';
             }
         }
@@ -219,14 +225,14 @@
         };
 
         // 点击右箭头，图片容器向坐移动，left值增大，步长为正值
-        arrow_next.onclick =function (e) {
+        arrow_next.onclick = function (e) {
             animate(-500);
         }
 
         // 图片自动轮播——定时器
         var timer = setInterval(() => {
             animate(-500);
-        },1000)
+        }, 1000)
 
         // 鼠标移入轮播停止
         container.onmouseover = function () {
@@ -237,9 +243,8 @@
         container.onmouseout = function () {
             timer = setInterval(() => {
                 animate(-500);
-            },1000)
+            }, 1000)
         }
-
     }
 </script>
 </body>

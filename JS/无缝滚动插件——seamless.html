@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .demo2 {
+            width: 600px;
+            height: 100px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 100px;
+        }
+        .list2 li {
+            float: left;
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+            text-align: center;
+            font-size: 20px;
+            color: #fff;
+            line-height:100px;
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="demo2">
+    <ul class="list2 clearfix" id="demo2">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+    </ul>
+</div>
+<script src="js/seamscroll.js"></script>
+<script>
+    seamscroll.init({
+        dom: document.getElementById('demo2'),
+        direction: 2
+    })
+</script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 /**
  * @time 2019/5/22
- * @file 文件描述
+ * @file 弹跳小球初级
  * @author lsb
  */
 

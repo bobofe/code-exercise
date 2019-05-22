@@ -118,7 +118,6 @@
         var arrow_pre = document.getElementById('arrow_pre');
         var arrow_next = document.getElementById('arrow_next');
         var pics = document.getElementById('pics');
-
         // lists_obj 为类数组对象
         var lists_obj = lists_wrap.children;
         // 将类数组对象转为数组,也可以不转化，用call强制调用
@@ -142,69 +141,11 @@
          * @param {string} step 图片容器left移动的步长
          * @return {Object} 返回值描述
          * */
-        function animate(step) {
-            // 图片容器的初始left值，开始为-500px
+        function animate( num) {
+            var step = 500;
+            // 图片容器的初始left值
             var current_left = getComputedStyle(pics).left;
-            //
-            var left = parseInt(current_left) + step;
-
-            pic_move(left);
-            update_circle();
-        }
-
-        /**
-         * @file 根据当前图片的index给对应页码添加样式的函数
-         * @author
-         * */
-        function update_circle() {
-
-            //下面这段代码用来实现图片和页码匹配
-            // 获得新的移动后的新的left值，计算出当前为第n章图片
-            var new_left = getComputedStyle(pics).left;
-
-            // 图片的index从0开始，这里计算后要-1
-            var index = -parseInt(new_left) / 500 - 1;
-
-            // 清空所有页码的class值，给当前图片对应的页码，添加class为current
-            lists_arr.forEach(function (ele) {
-                ele.className = '';
-            });
-
-            lists_arr[index].className = 'current';
-        }
-
-        /**
-         * @file 点击页码切换到相应图片的函数，这是一个立即执行的函数
-         * @author
-         * */
-        ;(function () {
-            for (let index in lists_arr) {
-
-                // 给页码加click事件，点击时
-                lists_arr[index].addEventListener('click', function (event) {
-                    event.stopPropagation();
-
-                    // 先清空所有页码的class，给当前添加的页码添加样式
-                    lists_arr.forEach(function (ele) {
-                        ele.className = '';
-                    });
-
-                    this.className = 'current';
-
-                    // 根据当前页码的index值，计算出当前图片容器的left值
-                    var left = -(parseInt(index) + 1) * 500;
-
-                    pic_move(left);
-                }, false)
-            }
-        })()
-
-        /**
-         * @file 这是控制图片的函数
-         * @author
-         * @param { number } left 图片容器的实时left值
-         * */
-        function pic_move(left) {
+            var left = parseInt(current_left) + step*num;
 
             // 这段代码用来图片切换展示
             // 如果left>-500,说明第一张图片5正在向右移动，此时，将5放到框内
@@ -217,21 +158,48 @@
             } else {
                 pics.style.left = -500 + 'px';
             }
+
+            //下面这段代码用来实现图片和页码匹配：根据当前图片的index给对应页码添加样式的函数
+            // 获得新的移动后的新的left值，计算出当前为第n章图片
+            var new_left = getComputedStyle(pics).left;
+            // 图片的index从0开始，这里计算后要-1
+            var index = -parseInt(new_left) / step - 1;
+            // 清空所有页码的class值，给当前图片对应的页码，添加class为current
+            lists_arr.forEach(function (ele) {
+                ele.className = '';
+            });
+            lists_arr[index].className = 'current';
         }
+
+        /**
+         * @file 点击页码切换到相应图片的函数，这是一个立即执行的函数
+         * @author
+         * */
+        ;(function () {
+            for (let index in lists_arr) {
+                // 给页码加click事件，点击时
+                lists_arr[index].addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    // 根据当前页码的index值，计算出当前图片容器的left值
+                    var num = -(parseInt(index) + 1) ;
+                    animate(num);
+                }, false)
+            }
+        })()
 
         // 点击左箭头，图片容器向右移动，left值增大，步长为正值
         arrow_pre.onclick = function (e) {
-            animate(500);
+            animate(1);
         };
 
         // 点击右箭头，图片容器向坐移动，left值增大，步长为正值
         arrow_next.onclick = function (e) {
-            animate(-500);
+            animate(-1);
         }
 
         // 图片自动轮播——定时器
         var timer = setInterval(() => {
-            animate(-500);
+            animate(-1);
         }, 1000)
 
         // 鼠标移入轮播停止
@@ -242,7 +210,7 @@
         // 鼠标移出，再次开始自动轮播
         container.onmouseout = function () {
             timer = setInterval(() => {
-                animate(-500);
+                animate(-1);
             }, 1000)
         }
     }

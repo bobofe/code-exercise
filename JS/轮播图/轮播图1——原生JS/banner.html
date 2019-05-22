@@ -139,7 +139,7 @@
         /**
          * @file 改变图片容器left值的函数animate
          * @author
-         * @param {string} step 容器left移动的步长
+         * @param {string} step 图片容器left移动的步长
          * @return {Object} 返回值描述
          * */
         function animate(step) {
@@ -185,7 +185,7 @@
                     event.stopPropagation();
 
                     // 先清空所有页码的class，给当前添加的页码添加样式
-                    lists_arr.forEach(function (ele, index, arr) {
+                    lists_arr.forEach(function (ele) {
                         ele.className = '';
                     });
 
@@ -205,7 +205,8 @@
          * @param { number } left 图片容器的实时left值
          * */
         function pic_move(left) {
-            // 这段代码用来实现左右箭头切换图片和点击页码切换图片
+
+            // 这段代码用来图片切换展示
             // 如果left>-500,说明第一张图片5正在向右移动，此时，将5放到框内
             // 如果left<-3000,说明最后一张图片1正在向左移动，此时，将1放到框内
             // 如果left>-500&&<-3000,说明此时在1-5的某张图片中，加上或减去步长即可

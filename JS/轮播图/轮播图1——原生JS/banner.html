@@ -166,7 +166,7 @@
             var index = -parseInt(new_left) / 500 - 1;
 
             // 清空所有页码的class值，给当前图片对应的页码，添加class为current
-            lists_arr.forEach(function (ele, index, arr) {
+            lists_arr.forEach(function (ele) {
                 ele.className = '';
             });
 
@@ -218,7 +218,6 @@
                 pics.style.left = -500 + 'px';
             }
         }
-
 
         // 点击左箭头，图片容器向右移动，left值增大，步长为正值
         arrow_pre.onclick = function (e) {

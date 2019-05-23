@@ -4,6 +4,10 @@
  * @author lsb
  */
 
+
+/**
+ *准备工作
+ */
 // 设定画布
 const canvas = document.querySelector('canvas');
 // 画布上下文
@@ -36,6 +40,12 @@ function randomColor() {
         random(0, 255) + ')';
 }
 
+/**
+ * 需求：
+ * 1，需要一个小球，draw方法
+ * 2.小球会动，有速度，有左边，update方法事实更新小球的速度和位置
+ * 3.小球碰了之后怎么办，collisionDetect，碰撞的小球都改变颜色
+ */
 
 /**
  * @param x 小球在屏幕中的初始横坐标，范围为 0-width

@@ -122,6 +122,7 @@
         var lists_obj = lists_wrap.children;
         // 将类数组对象转为数组,也可以不转化，用call强制调用
         var lists_arr = Array.prototype.slice.call(lists_obj);
+        var step = 500;
 
         /**
          * 要实现的功能：
@@ -141,8 +142,7 @@
          * @param {string} step 图片容器left移动的步长
          * @return {Object} 返回值描述
          * */
-        function animate( num) {
-            var step = 500;
+        function animate(num) {
             // 图片容器的初始left值
             var current_left = getComputedStyle(pics).left;
             var left = parseInt(current_left) + step*num;
@@ -180,8 +180,15 @@
                 // 给页码加click事件，点击时
                 lists_arr[index].addEventListener('click', function (event) {
                     event.stopPropagation();
-                    // 根据当前页码的index值，计算出当前图片容器的left值
-                    var num = -(parseInt(index) + 1) ;
+
+                    var current_left = getComputedStyle(pics).left;
+                    // 根据当前页码的index值
+                    // 当前图片的index
+                    var n = -(parseInt(current_left) / step + 1);
+                    // 根据当前页码的index值和当前图片的index值来判断向右/左移动几个单位
+                    // 移动步数
+                    var num = n - index;
+
                     animate(num);
                 }, false)
             }

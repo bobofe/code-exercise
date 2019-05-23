@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计时器</title>
+    <style>
+        h1,p{
+            text-align: center;
+        }
+        p{
+            font-weight: bold;
+            font-size: 20px;
+        }
+        span{
+            display: inline-block;
+            width:40px;
+        }
+    </style>
+</head>
+<body>
+<h1>计时器</h1>
+<p><button id="start1">开始计时</button><button id="end1">结束计时</button><button id="paused1">暂停计时</button></p>
+<p><span id="hour1"></span><span id="minute1"></span><span id="second1"></span></p>
+<p><button id="start2">开始计时</button><button id="end2">结束计时</button><button id="paused2">暂停计时</button></p>
+<p><span id="hour2">00</span>:<span id="minute2">00</span>:<span id="second2">00</span>:<span id="mm">00</span></p>
+</body>
+<script>
+
+    /**
+     * 需求：写一个计时器，这个计时器有三个功能
+     * 1.开始计时
+     *      三个变量h,m,s
+     *      每秒s+1,够了60，m+1，再够了60，h+1
+     *      一个周期性计时器
+     * 2.暂停计时
+     *      页面停止在暂停时状态，再点击start，继续在当前时间基础上走，只清空计时器即可
+     * 3.结束计时
+     *      页面停止在结束状态，再点击start，开始一个新的计时器。total需要归0
+     *
+      */
+    var startButton1 = document.querySelector('#start1');
+    var endButton1 = document.querySelector('#end1');
+    var pausedButton1 = document.querySelector('#paused1');
+    var h_wrap1 = document.querySelector('#hour1');
+    var m_wrap1= document.querySelector('#minute1');
+    var s_wrap1 = document.querySelector('#second1');
+    // total在开始计时和暂停计时结束计时器都会用，所以需要定义在外头
+    var total1 = 0;
+    // 方便停止计时器
+    var timer1;
+
+
+    startButton1.onclick = function () {
+        timer1 = setInterval(() => {
+            total1 ++;
+            var h = Math.floor(total1 / 3600);
+            var m = Math.floor(total1 / 60);  // 取整数部分
+            var s = total1 % 60;  // 取余数
+
+            h_wrap1.innerHTML = h + '时';
+            m_wrap1.innerHTML = m + '分';
+            s_wrap1.innerHTML = s + '秒';
+        },1000)
+    }
+
+    endButton1.onclick = function () {
+        clearInterval(timer1);
+        total1 = 0;
+    }
+
+    pausedButton1.onclick = function () {
+        clearInterval(timer1);
+    }
+
+
+
+    var startButton2 = document.querySelector('#start2');
+    var endButton2 = document.querySelector('#end2');
+    var pausedButton2 = document.querySelector('#paused2');
+    var h_wrap2 = document.querySelector('#hour2');
+    var m_wrap2= document.querySelector('#minute2');
+    var s_wrap2 = document.querySelector('#second2');
+    var ms_wrap2 = document.querySelector('#mm');
+
+    // total在开始计时和暂停计时结束计时器都会用，所以需要定义在外头
+    var total2 = 0;
+    // 方便停止计时器
+    var timer2;
+
+
+    startButton2.onclick = function () {
+        timer2 = setInterval(() => {
+            total2 ++;
+            var h = Math.floor(total2 / 360000);
+            var m = Math.floor(total2 / 6000);  // 取整数部分
+            var s= Math.floor(total2 / 100);  // 取余数
+            var ms = total2 % 100;
+            h = h>9 ? h : '0' + h;
+            m = h>9 ? m : '0' + m;
+            s = s>9 ? s : '0' + s;
+            ms = ms > 9 ? ms : '0' + s;
+
+            h_wrap2.innerHTML = h ;
+            m_wrap2.innerHTML = m ;
+            s_wrap2.innerHTML = s ;
+            ms_wrap2.innerHTML = ms ;
+        },10)
+    }
+
+    endButton2.onclick = function () {
+        clearInterval(timer2);
+        total2 = 0;
+    }
+
+    pausedButton2.onclick = function () {
+        clearInterval(timer2);
+    }
+
+
+</script>
+</html>

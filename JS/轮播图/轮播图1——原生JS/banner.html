@@ -16,13 +16,12 @@
         }
 
         .container {
-            width: 500px;
-            height: 200px;
             overflow: hidden;
             position: relative;
             margin: 20px auto;
             text-align: center;
             font-size: 0;
+            background: #000;
         }
 
         .container:hover span.arrow-pre, .container:hover span.arrow-next {
@@ -32,16 +31,14 @@
         .pics {
             position: absolute;
             top: 0;
-            left: -500px; /* 图片的宽度为500px,将第一张图片移出去 */
             /*z-index: 1;*/
-            width: 3500px;
-            height: 200px;
             overflow: hidden; /*清除浮动*/
             zoom: 1;
         }
 
         .pics a {
             float: left;
+            box-sizing: border-box;
         }
 
         ul {
@@ -118,6 +115,7 @@
         var arrow_pre = document.getElementById('arrow_pre');
         var arrow_next = document.getElementById('arrow_next');
         var pics = document.getElementById('pics');
+        var pic = document.querySelectorAll('a')[0];
         // lists_obj 为类数组对象
         var lists_obj = lists_wrap.children;
         // 将类数组对象转为数组,也可以不转化，用call强制调用
@@ -125,8 +123,19 @@
         
         // 图片相关，图片数量,图片宽度
         var pics_n = pics.children.length - 2;
-        var pic_w = parseInt(getComputedStyle(pics.children[0]).width);
-        
+        var pic_w = parseInt(getComputedStyle(pic).width);
+        var pic_h = parseInt(getComputedStyle(pic).height);
+
+        // 设置容器的宽高等于图片的宽高
+        container.style.width = pic_w + 'px';
+        container.style.height = pic_h + 'px';
+
+        // 设置图片容器的width为（（图片数*2）* 图片宽度）
+        // 设置图片容器的高度为图片的高度
+        // 设置图片容器的起始left为-pic_w
+        pics.style.width = (pics_n + 2) * pic_w + 'px';
+        pics.style.height = pic_h + 'px';
+        pics.style.left = -pic_w + 'px';
 
         /**
          * 要实现的功能：
@@ -196,7 +205,7 @@
                     animate(num);
                 }, false)
             }
-        })()
+        })();
 
         // 点击左箭头，图片容器向右移动，left值增大，步长为正值
         arrow_pre.onclick = function (e) {

@@ -51,6 +51,7 @@
 
 
     startButton1.onclick = function () {
+        clearInterval(timer1);
         timer1 = setInterval(() => {
             total1 ++;
             var h = Math.floor(total1 / 3600);
@@ -89,16 +90,18 @@
 
 
     startButton2.onclick = function () {
+        // 这里必须清计时器，否则每次点击都会生成一个新的计时器
+        clearInterval(timer2);
         timer2 = setInterval(() => {
             total2 ++;
-            var h = Math.floor(total2 / 360000);
-            var m = Math.floor(total2 / 6000);  // 取整数部分
-            var s= Math.floor(total2 / 100);  // 取余数
+            var h = Math.floor(total2 / 360000) % 24;
+            var m = Math.floor(total2 / 6000) % 60;  // 取整数部分
+            var s= Math.floor(total2 / 100) % 60;  // 取余数
             var ms = total2 % 100;
             h = h>9 ? h : '0' + h;
             m = h>9 ? m : '0' + m;
             s = s>9 ? s : '0' + s;
-            ms = ms > 9 ? ms : '0' + s;
+            ms = ms > 9 ? ms : '0' + ms;
 
             h_wrap2.innerHTML = h ;
             m_wrap2.innerHTML = m ;

@@ -1,12 +1,14 @@
-#### 1.getBoundingClientRect()
+[TOC]
 
-#### 2.获得鼠标的位置信息
+## 1.getBoundingClientRect()
 
-#### 3.防抖
+## 2.获得鼠标的位置信息
 
-#### 4.节流
+## 3.防抖
 
-#### 5.懒加载
+## 4.节流
+
+## 5.懒加载
 
 JavaScript 类数组对象
 
@@ -51,7 +53,7 @@ Array.prototype.push.call(foo, 'PHP');
 
 **call，apply，bind的本质是给对象添加一个新的方法，让这个对象能够调用这个方法**
 
-#### 6.无缝滚动——scrollTop/srollLeft
+## 6.无缝滚动——scrollTop/srollLeft
 
 element.scrollLeft;滚动条到元素左边的距离
 
@@ -78,11 +80,66 @@ element.scrollLeft;滚动条到元素左边的距离
 
 (3)实例三在实例二的基础上进行了部分改进，原理相同
 
-#### 7.无缝滚动插件——seamless-scroll
+## 7.无缝滚动插件——seamless-scroll
 
 注：这是一个轻量级的小插件，非常适用于跑马灯等要求不高的无缝滚动，cdn有点问题，可以将插件的js**下载到本地使用
 
-#### 8.轮播图
+## 8.百度索索建议API
 
-(1)原生JS
+1️⃣直接返回json数据
+
+http://suggestion.baidu.com/?wd=关键词&action=opensearch
+
+2️⃣json数据当做回调函数的参数传回来
+http://suggestion.baidu.com/?wd=关键词
+
+默认回调函数名是window.baidu.sug
+
+等价于
+
+http://suggestion.baidu.com/?wd=关键词&cb=window.baidu.sug
+
+3️⃣http://suggestion.baidu.com/?wd=关键词&cb=自定义函数名
+
+
+
+遇到的问题：
+
+```javascript
+fetch('http://suggestion.baidu.com/?wd='+this.value+'&action=opensearch',
+    {mode: 'no-cors'})
+    .then(function (res) {
+         return res.json()
+    })
+    .then(function (res_json) {
+         console.log(res_json);
+    })
+```
+
+后台服务器没设cors，mode="cors"，会报错。
+这个时候，你 fetch 改成了mode='no-cors' 表示不垮域，可以请求成功，单你拿不到服务器返回数据，它被标记了'opaque'，network是有请求成功的记录
+
+针对跨域请求，cors模式是常见跨域请求实现，但是fetch自带的no-cors跨域请求模式则较为陌生，该模式有一个比较明显的特点：
+
+该模式允许浏览器发送本次跨域请求，但是不能访问响应返回的内容，这也是其response type为opaque透明的原因。
+
+也就是说，**这个接口后台不支持跨域请求**
+
+解决：其他跨域方法
+
+方法一：jsonp，success
+
+bug1：定义jsonp方法时，传到参数对象中的回调函数的属性名必须是cb
+
+bug2：调用jsonp方法时，传给回调函数代表的属性名的属性值必须是一个字符串
+
+Bug3：批量插入多个元素时，用字符串拼接的方法，只在最后插入一次
+
+## 9.秒表计时器
+
+注意：(1)开始计时器要加清浮动，否则每次点击都会创建一个新的计时器，造成累加效果，秒表越跑越快
+
+​            (2)时分秒在计算之后要取余，否则会超过60/24
+
+
 

@@ -85,22 +85,35 @@
                 // 因为该接口不支持cors跨域，所以上面的尝试失败
 
                 // 尝试jsonp
-                jsonp({ url: 'http://suggestion.baidu.com/', params: {wd: this.value}, cb: 'getSuggesstions' })
-                    .then(function (data) {
-                        var arr = data.s;
-                        console.log(data.s);
-                        var html = '';
-                        
-                        
-                        // 这里不要用document.createElement去生成li，用字符串拼接，生成多个元素时候都用字符串拼接
-                        // 每次都append太耗费性能
-                        for (var i = 0; i < arr.length; i++) {
-                            html += `<li>${arr[i]}</li>`
-                        }
+                // jsonp({ url: 'http://suggestion.baidu.com/', params: {wd: this.value}, cb: 'getSuggesstions' })
+                //     .then(function (data) {
+                //         var arr = data.s;
+                //         console.log(data.s);
+                //         var html = '';
+                //
+                //
+                //         // 这里不要用document.createElement去生成li，用字符串拼接，生成多个元素时候都用字符串拼接
+                //         // 每次都append太耗费性能
+                //         for (var i = 0; i < arr.length; i++) {
+                //             html += `<li>${arr[i]}</li>`
+                //         }
+                //
+                //         content.innerHTML = html;
+                //         content.style.display = 'block';
+                //
+                //     })
 
-                        content.innerHTML = html;
-                        content.style.display = 'block';
 
+                // 尝试nginx代理
+
+                fetch('http://dev.myserver.com:8081/googleapi?wd='+this.value+'&action=opensearch',
+                    {mode: 'cors'})
+                    .then(function (res) {
+                        // console.log(res.text())
+                        return res.json()
+                    })
+                    .then(function (res_json) {
+                        console.log(res_json);
                     })
             }else{
                 content.style.display = 'none';
@@ -109,25 +122,23 @@
 
         // jsonp 跨域
         // 这里回调函数的属性名必须是cb
-        function jsonp({ url, params, cb }) {
-            return new Promise((resolve ) => {
-                let script = document.createElement('script')
-                window[cb] = function (data) {
-                    resolve(data);
-                    document.body.removeChild(script);
-                }
-                params = {...params, cb }
-                let arrs = []
-                for (let key in params ) {
-                    arrs.push(`${key}=${params[key]}`)
-                }
-                script.src = `${url}?${arrs.join('&')}`
-                document.body.appendChild(script)
-            })
-        }
-        
-        
-
+        // function jsonp({ url, params, cb }) {
+        //     return new Promise((resolve ) => {
+        //         let script = document.createElement('script')
+        //         window[cb] = function (data) {
+        //             resolve(data);
+        //             document.body.removeChild(script);
+        //         }
+        //         params = {...params, cb }
+        //         let arrs = []
+        //         for (let key in params ) {
+        //             arrs.push(`${key}=${params[key]}`)
+        //         }
+        //         script.src = `${url}?${arrs.join('&')}`
+        //         document.body.appendChild(script)
+        //     })
+        // }
+        //
 </script>
 </body>
 </html>

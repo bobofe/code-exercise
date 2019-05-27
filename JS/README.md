@@ -129,11 +129,29 @@ fetch('http://suggestion.baidu.com/?wd='+this.value+'&action=opensearch',
 
 方法一：jsonp，success
 
-bug1：定义jsonp方法时，传到参数对象中的回调函数的属性名必须是cb
+bug1：定义jsonp方法时，传到参数对象中的回调函数的属性名必须是cb(这个例子必须是)
 
 bug2：调用jsonp方法时，传给回调函数代表的属性名的属性值必须是一个字符串
 
 Bug3：批量插入多个元素时，用字符串拼接的方法，只在最后插入一次
+
+方法二：nginx反向代理(这个只适合测试页面，实际项目中不可能启动一个nginx)
+
+原理：通过nginx配置一个代理服务器，域名与本地相同，端口不同，设置为允许跨域，本地访问代理服务器，代理服务器访问要访问的地址。因为跨域是请求结果被浏览器拦截，不是请求失败，所以用服务器发起请求就不会被拦截，服务器接受到请求结果再把结果传给本地请求即可
+
+安装nginx：brew install nginx 
+
+配置文件地址： /usr/local/etc/nginx/nginx.conf
+
+启动nginx：nginx
+
+重新启动： nginx -s reload
+
+测试nginx语法是否错误：nginx -t
+
+关闭nginx： nginx -s stop
+
+bug：配置nginx时，server_name可以是自定义的域名，可以是127.0.0.1，就是不能是**localhost**
 
 ## 9.秒表计时器
 

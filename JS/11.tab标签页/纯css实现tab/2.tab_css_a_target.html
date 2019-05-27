@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Target实现tab标签页</title>
+    <style>
+        body,ul,li{
+            margin: 0;
+            padding: 0;
+        }
+        li{
+            list-style:none;
+        }
+        a{
+            text-decoration: none;
+        }
+        .clear:before{
+            display: table;
+            content: '';
+        }
+        .clear:after{
+            display: table;
+            content: '';
+            clear: both;
+        }
+
+        .tab{
+            width: 600px;
+            height: 300px;
+            /* background: #fcf; */
+            margin:0 auto;
+        }
+
+        .tab_h{
+            box-sizing: border-box;
+            /* background: #acf; */
+        }
+
+        .tab_h li{
+            padding:10px 0;
+            float: left;
+            text-align: center;
+            /* height: 0; */
+        }
+        .tab_h li a{
+            display: inline-block;
+            color: #ccc;
+            padding: 5px 32px;
+        }
+
+        .tab_h li:hover a{
+            border-radius: 20px;
+            color: #5FC4F3;
+            background: springgreen;
+        }
+        .tab_b{
+            text-align: center;
+        }
+        .tab_b>div{
+            display: none;
+        }
+        .tab_b>div:target {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="tab">
+    <ul class="tab_h clear">
+        <li class="attention"><a href="#attention_b">关注</a></li>
+        <li class="video"><a href="#video_b">视频</a></li>
+        <li class="suggession"><a href="#suggession_b">推荐</a></li>
+        <li class="photo_service"><a href="#photo_service">图片社</a></li>
+        <li class="novel"><a href="#novel">小说</a></li>
+        <li class="hotspot"><a href="#hotpot_b">热点</a></li>
+    </ul>
+    <div class="tab_b">
+        <div id="attention_b">
+            我是关注
+        </div>
+        <div id="video_b">
+            我是视频
+        </div>
+        <div id="suggession_b">
+            我是推荐
+        </div>
+        <div id="photo_service">
+            我是图片社
+        </div>
+        <div id="novel">
+            我是小说
+        </div>
+        <div id="hotpot_b">
+            我是热点
+        </div>
+    </div>
+</div>
+</body>
+</html>

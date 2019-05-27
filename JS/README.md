@@ -234,6 +234,13 @@ CSS：当鼠标移动到 li 上时，li 上有新样式并且li下的div显示�
 本质：锚点
 
 - 缺点：因为锚点会将选中的元素滚动到页面最上面，每次切换位置都要移动，体验极差。
+- 首次加载没有默认值
+
+bug：写选择器时不能只写一个:target，必须加上父选择器，否则权重不够
+
+![image-20190528001213993](../../../../Users/lsb/Library/Application Support/typora-user-images/image-20190528001213993.png)
+
+样式会应用到锚点指定的内容区
 
 **方法三：利用label和radio的绑定关系以及radio选中时的:checked**
 

@@ -159,5 +159,87 @@ bug：配置nginx时，server_name可以是自定义的域名，可以是127.0.0
 
 ​            (2)时分秒在计算之后要取余，否则会超过60/24
 
+## 10.轮播图
+
+
+
+## 11.tab标签页
+
+### （1）css实现标签页：
+
+#### 方法一：利用hover选择器 
+
+- 缺点：只有鼠标在元素上面的时候才有效果，无法实现选中和默认显示某一个的效果
+
+HTML布局：**滑动门布局**
+
+原因：选择器只能拿到hover元素的子元素
+
+![image-20190527182138619](../../../../Users/lsb/Library/Application Support/typora-user-images/image-20190527182138619.png)
+
+CSS：当鼠标移动到 li 上时，li 上有新样式并且li下的div显示出来，非当前li下的div都隐藏display:none;
+
+难点：内容div要相对于tab进行布局
+
+```css
+            .tab {
+                width: 600px;
+                height: 300px;
+                /* background: #fcf; */
+                margin: 0 auto;
+                position: relative;       /*做定位父元素*/
+            }
+
+            .tab_h {
+                box-sizing: border-box;
+                /* background: #acf; */
+            }
+
+            .tab_h li {
+                padding: 10px 0;
+                float: left;
+                text-align: center;
+                /* height: 0; */
+            }
+            .tab_h li a {
+                display: inline-block;
+                color: #ccc;
+                padding: 5px 32px;
+            }
+
+            .tab_h li:hover a {
+                border-radius: 20px;
+                color: #5fc4f3;
+                background: springgreen;
+            }
+            .tab_h li > div {
+                height: 50px;
+                line-height: 50px;
+                position: absolute;
+                left: 0;
+                top: 50px;
+                width: 600px;
+                display: none;
+            }
+						/*当鼠标移动到li上，lix*/
+            .tab_h li:hover > div {
+                display: block;
+            }
+```
+
+
+
+#### 方法二：利用a标签的锚点 + :target选择器
+
+本质：锚点
+
+- 缺点：因为锚点会将选中的元素滚动到页面最上面，每次切换位置都要移动，体验极差。
+
+**方法三：利用label和radio的绑定关系以及radio选中时的:checked**
+
+来实现效果 
+
+- 缺点：HTML结构元素更复杂
+
 
 

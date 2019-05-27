@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            body,
+            ul,
+            li {
+                margin: 0;
+                padding: 0;
+            }
+            li {
+                list-style: none;
+            }
+            a {
+                text-decoration: none;
+            }
+            .clear:before {
+                display: table;
+                content: "";
+            }
+            .clear:after {
+                display: table;
+                content: "";
+                clear: both;
+            }
+
+            .tab {
+                width: 600px;
+                height: 300px;
+                /* background: #fcf; */
+                margin: 0 auto;
+                position: relative;
+            }
+
+            .tab_h {
+                box-sizing: border-box;
+                /* background: #acf; */
+                /* overflow: hidden; */
+            }
+
+            .tab_h li {
+                padding: 10px 0;
+                float: left;
+                text-align: center;
+                /* height: 0; */
+            }
+            .tab_h li a {
+                display: inline-block;
+                color: #ccc;
+                padding: 5px 32px;
+            }
+
+            .tab_h li:hover a {
+                border-radius: 20px;
+                color: #5fc4f3;
+                background: springgreen;
+            }
+            .tab_h li > div {
+                height: 50px;
+                line-height: 50px;
+                position: absolute;
+                left: 0;
+                top: 50px;
+                width: 600px;
+                display: none;
+            }
+            .tab_h li:hover > div {
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="tab">
+            <ul class="tab_h clear">
+                <li class="attention">
+                    <a href="#">关注</a>
+                    <div id="attention_b" class="">
+                        我是关注
+                    </div>
+                </li>
+                <li class="video">
+                    <a href="#">视频</a>
+                    <div id="video_b">
+                        我是视频
+                    </div>
+                </li>
+                <li class="suggession">
+                    <a href="#">推荐 </a>
+                    <div id="suggession_b">
+                        我是推荐
+                    </div>
+                </li>
+                <li class="photo_service">
+                    <a href="#">图片社 </a>
+                    <div id="photo_service">
+                        我是图片社
+                    </div>
+                </li>
+                <li class="novel">
+                    <a href="#">小说 </a>
+                    <div id="novel_b">
+                        我是小说
+                    </div>
+                </li>
+                <li class="hotspot">
+                    <a href="#">热点 </a>
+                    <div id="hotpot_b">
+                        我是热点
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>

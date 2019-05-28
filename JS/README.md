@@ -307,7 +307,7 @@ bug：写选择器时不能只写一个:target，必须加上父选择器，否�
 
 ### （2）js实现tab切换
 
-方法一：自写版本
+#### 方法一：自写版本
 
 HTML :
 
@@ -454,5 +454,25 @@ tabHead.onclick = function (e) {
 
 
 
+#### 方法二：双层for循环
 
+```javascript
+for (var i = 0; i < myLi.length; i++) {
+    // 自定义属性index，这个很常用
+    myLi[i].index = i;
+    myLi[i].onclick = function () {
+        for (var j = 0; j < myLi.length; j++) {
+            myLi[j].className = "off";
+            myDiv[j].className = "hide";
+        }
+        this.className = "on";
+        myDiv[this.index].className = "show";
+    }
+}
+```
 
+**自定义属性**：**js可以为任何HTML元素添加任意个自定义属性，且如同元素的本来属性一样进行操作**
+
+数组元素本身没有index属性，自定义一个，比方法一获取index方便好用
+
+> 对比方法一盒方法二：我觉得方法二更好，逻辑清晰，代码简单

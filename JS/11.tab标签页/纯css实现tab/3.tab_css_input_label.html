@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>input+label实现tab标签页</title>
+    <style>
+        body,ul {
+            margin: 0;
+            padding: 0;
+
+        }
+        li{
+            list-style: none;
+        }
+        .clearfloat {
+            zoom: 1;
+        }
+        .clearfloat::after {
+            display: block;
+            clear: both;
+            content: "";
+            visibility: hidden;
+            height: 0;
+        }
+        .tab{
+            margin: 20px;
+        }
+        .tab-item .test-radio{
+            display: none;
+        }
+        .tab-list{
+            position: relative;
+            z-index: 1;
+        }
+        .tab-item{
+            float: left;
+            margin-right: 30px;
+        }
+        .tab-item>.test-label{
+            display: inline-block;
+            background: #ccc;
+            text-align: center;
+            padding: 10px 20px;
+            border:1px solid transparent;
+            border-radius:10px 10px 0 0 ;
+            border-bottom: none;
+
+            /*z-index: 1;*/
+        }
+        .tab-item>div{
+            position: absolute;
+            /*z-index: 2;*/
+            left: 0;
+            top:42px;
+            display: none;
+            width: 500px;
+            height: 100px;
+            /*background: #5FC4F3;*/
+            border: 1px solid red;
+        }
+        input[type='radio']:checked+label{
+            position:relative;
+            z-index: 999;
+            border:1px solid red;
+            border-bottom: none;
+        }
+        input[type='radio']:checked~div{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="tab">
+    <ul class="tab-list clearfloat">
+        <li class="tab-item">
+            <input type="radio" id="testTabRadio1" class="test-radio" name="tab" checked="checked">
+            <label class="test-label" for="testTabRadio1">选项卡一</label>
+            <div class="tab-box active">
+                111111111111
+            </div>
+        </li>
+        <li class="tab-item">
+            <input type="radio" id="testTabRadio2" class="test-radio" name="tab">
+            <label class="test-label" for="testTabRadio2">选项卡二</label>
+            <div class="tab-box">
+                2222222222222
+            </div>
+        </li>
+        <li class="tab-item">
+            <input type="radio" id="testTabRadio3" class="test-radio" name="tab">
+            <label class="test-label" for="testTabRadio3">选项卡三</label>
+            <div class="tab-box">
+                33333333333333
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

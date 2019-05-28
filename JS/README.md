@@ -167,6 +167,10 @@ bug：配置nginx时，server_name可以是自定义的域名，可以是127.0.0
 
 ### （1）css实现标签页：
 
+原理：利用display:none;或者position:absolute或opacity:0;，触发时display:block;或者z-index增大，display:none;布局更简单
+
+以下都使用display:none;
+
 #### 方法一：利用hover选择器 
 
 - 缺点：只有鼠标在元素上面的时候才有效果，无法实现选中和默认显示某一个的效果
@@ -175,7 +179,7 @@ HTML布局：**滑动门布局**
 
 原因：选择器只能拿到hover元素的子元素
 
-![image-20190527182138619](../../../../Users/lsb/Library/Application Support/typora-user-images/image-20190527182138619.png)
+![image-20190527182138619](images/tab1.png)
 
 CSS：当鼠标移动到 li 上时，li 上有新样式并且li下的div显示出来，非当前li下的div都隐藏display:none;
 
@@ -238,15 +242,70 @@ CSS：当鼠标移动到 li 上时，li 上有新样式并且li下的div显示�
 
 bug：写选择器时不能只写一个:target，必须加上父选择器，否则权重不够
 
-![image-20190528001213993](../../../../Users/lsb/Library/Application Support/typora-user-images/image-20190528001213993.png)
+```css
+.tab_b>div:target {
+    display: block;
+}
+```
 
 样式会应用到锚点指定的内容区
 
-**方法三：利用label和radio的绑定关系以及radio选中时的:checked**
+#### 方法三：利用label和radio的绑定关系以及radio选中时的:checked
+
+```css
+/* 匹配任意被勾选/选中的radio(单选按钮),checkbox(复选框),或者option(select中的一项) */
+```
 
 来实现效果 
 
 - 缺点：HTML结构元素更复杂
+
+经过实验发现第三种方法达到的效果最好。所以下面讲一下第三种实现的方法。
+
+这种方法的写法不固定，我查资料的时候各种各样的写法都有一度让我一头雾水的。最后看完发现总体思路都是一样的，无非就是下面的几个步骤。
+
+1. 绑定label和radio：这个不用说id和for属性绑定
+2. 隐藏radio按钮：这个方法有很多充分发挥你们的想象力就可以了，我见过的方法有设置`display:none;`隐藏的、设置**绝对定位，将left设置为很大的负值**，移动到页面外达到隐藏效果、设置**绝对定位：使元素脱离文档流，然后`opacity: 0;`**设置为透明来达到隐藏效果。
+3. 隐藏多余的tab页：和上面同理，还可以通过`z-index`设置层级关系来相互遮挡。
+4. 设置默认项：在默认按钮上添加`checked="checked"`属性
+5. 设置选中效果：利用+选择器 和 ~选择器来设置选中对应元素时下方的tab页的样式，来达到选中的效果
+
+
+
+问题1：div相对于公共父元素ul绝对定位，如果给li设置定位，选项卡不能压在div上，原因子压父，只有同一层级的可以设置层级进行比较，所以应该在div的同一层级设置z-index，应该设置在label上
+
+![image-20190528090607246](images/tab2.png)
+
+**在写样式时，如果有子元素，父元素只负责位置，具体样式都设置在子元素上**，在本例中，li只负责定位，具体样式设置在子元素label上
+
+![image-20190528092724786](images/tab3.png)
+
+问题2：当input:checked时，label显示左，上，右边框，去背景，其他label如果显示底边框会超出1px
+
+解决：只有当label被激活时，再让它压div，否则，让div压label
+
+问题3：给label设置了relative，div设置了absolute；本应该后一个压前一个，但是前一个压在了后一个上
+
+```html
+<label class="test-label" for="testTabRadio3">选项卡三</label>
+<div class="tab-box">33333333333333</div>
+```
+
+![image-20190528105411992](images/tab4.png)
+
+原因待查找。。。。
+
+解决方法：将给label设置了relative移到激活状态下，或者给给label的relative和div的absolute；设置z-index
+
+默认堆叠效果：（1）平级元素-后来者居上；（2）**子元素压在父元素之上----子压父**
+
+注意：（1）取值可以为负，取值为负时，当前元素会位于页面正常显示内容之下
+
+​           （2）z-index 是无法改变父子关系的堆叠顺序：**子元素始终压在父元素之上------子压父**
+
+​           （3）只有有定位的元素可以使用z-index，只能作用在relative、absolute、fixed定位的元素上
+
+
 
 
 

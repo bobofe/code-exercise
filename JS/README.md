@@ -297,13 +297,160 @@ bug：写选择器时不能只写一个:target，必须加上父选择器，否�
 
 解决方法：将给label设置了relative移到激活状态下，或者给给label的relative和div的absolute；设置z-index
 
-默认堆叠效果：（1）平级元素-后来者居上；（2）**子元素压在父元素之上----子压父**
+默认堆叠效果：1️⃣平级元素-后来者居上；2️⃣**子元素压在父元素之上----子压父**
 
-注意：（1）取值可以为负，取值为负时，当前元素会位于页面正常显示内容之下
+注意：①取值可以为负，取值为负时，当前元素会位于页面正常显示内容之下
 
-​           （2）z-index 是无法改变父子关系的堆叠顺序：**子元素始终压在父元素之上------子压父**
+​            ②z-index 是无法改变父子关系的堆叠顺序：**子元素始终压在父元素之上------子压父**
 
-​           （3）只有有定位的元素可以使用z-index，只能作用在relative、absolute、fixed定位的元素上
+​            ③只有有定位的元素可以使用z-index，只能作用在relative、absolute、fixed定位的元素上
+
+### （2）js实现tab切换
+
+方法一：自写版本
+
+HTML :
+
+```html
+    <div class="tab">
+        <ul class="tab_h clear">
+            <li class="attention"><a href="#" class="active">关注</a></li>
+            <li class="video"><a href="#">视频</a></li>
+            <li class="suggession"><a href="#">推荐</a></li>
+            <li class="photo_service"><a href="#">图片社</a></li>
+            <li class="novel"><a href="#">小说</a></li>
+            <li class="hotspot"><a href="#">热点</a></li>
+        </ul>
+        <div class="tab_b">
+            <div class="attention_b">
+                我是关注
+            </div>
+            <div class="video_b">
+                我是视频
+            </div>
+            <div class="suggession_b">
+                我是推荐
+            </div>
+            <div class="suggession_b">
+                我是图片社
+            </div>
+            <div class="suggession_b">
+                我是小说
+            </div>
+            <div class="hotpot_b">
+                我是热点
+            </div>
+        </div>
+    </div>
+```
+
+CSS：布局——正常文档流
+
+​           原理：控制li对应的div的display
+
+css关键点：样式要设置在a标签上，不能写在li上，因为：我的点击事件是绑定到公共父元素ul上的(事件代理)，由于事件冒泡，这样在触发事件的时候，实际的target会是 a 元素或 li 元素，没办法获取到target
+
+**在写样式时，如果有子元素，父元素只负责位置，具体样式都设置在子元素上**
+
+需要优化的地方：
+
+```css
+.tab_b>div:not(:first-child){
+    display: none;
+}
+```
+
+**如果用js去操作元素css属性的切换时，最好是直接操作class，而不是操作某一个具体的元素或具体的属性**
+
+```css
+.on{
+		display:block;
+}
+```
+
+JS：
+
+```javascript
+    // 获取元素
+    var tabHead = document.querySelector('.tab_h');
+    // 这是一个类数组对象
+    var tabItems = tabHead.children;
+    var tabBody = document.querySelector('.tab_b');
+    // 这是一个类数组对象
+    var tabContents = tabBody.children;
+    var aObjs = document.querySelectorAll('.tab_h>li>a');
+        
+		// 给tab_h下的所有li绑定事件
+    tabHead.onclick = function (e) {
+        // e.target会为a元素或li元素，只有e.target为li时成立，所以在a上触发，应该把css写在a上，不是li
+        var index = Array.prototype.indexOf.call(tabItems, e.target.parentElement); 
+            
+        Array.prototype.forEach.call(tabContents,function(item){
+           item.style.display = 'none';
+        })
+
+        Array.prototype.forEach.call(aObjs,function(item){
+            item.classList.remove('active');
+        })
+
+        tabContents[index].style.display = 'block'; 
+        e.target.classList.add('active');       
+    }
+```
+
+问题1：样式的切换用class ，不要用js写
+
+```javascript
+tabHead.onclick = function (e) {
+     // e.target会为a元素或li元素，只有e.target为li时成立，所以在a上触发，应该把css写在a上，不是li
+     var index = Array.prototype.indexOf.call(tabItems, e.target.parentElement); 
+            
+     Array.prototype.forEach.call(tabContents,function(item){
+         item.classList.remove('on');
+     })
+
+     Array.prototype.forEach.call(aObjs,function(item){
+         item.classList.remove('active');
+     })
+
+     tabContents[index].classList.add('on');
+     e.target.classList.add('active');       
+}
+```
+
+问题2：在移除class执行的是相同的操作，可以用一个函数来封装
+
+问题3：如何获取一个数组或类数组对象中的值的index
+
+> var index = Array.prototype.indexOf.call(Items, item);
+
+最终完成版本：
+
+```javascript
+     //获取元素
+     var tabHead = document.querySelector('.tab_h');
+     var tabBody = document.querySelector('.tab_b');
+     var aObjs = document.querySelectorAll('.tab_h>li>a');
+     var tabContent = tabBody.children;
+     // 给tab_h下的所有li绑定事件
+     tabHead.onclick = function (e) {
+         // e.target会为a元素或li元素，只有e.target为a时成立，所以在a上触发，应该把css写在a上，不是li
+         var index = Array.prototype.indexOf.call(tabHead.children, e.target.parentElement);
+
+         removeClassName(aObjs,'active')
+         removeClassName(tabContent,'on')
+
+         tabContent[index].classList.add('on');
+         e.target.classList.add('active');
+    }
+
+    // 批量移除一个元素下的子元素的某个class名
+     function removeClassName(eles,classN) {
+         Array.prototype.forEach.call(eles,function(item){
+            item.classList.remove(classN);
+         })
+     }
+```
 
 
 

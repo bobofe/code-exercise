@@ -6,11 +6,160 @@
 
 ## 3.防抖
 
+### 原理：
+
+每次点击或滚动，都重新创建一个计时器，重新开始计时
+
+```javascript
+// 2、防抖功能函数，接受传参
+function debounce(fn) {
+    // 4、创建一个标记用来存放定时器的返回值
+    let timer = null;
+    return function() {
+    // 5、每次当用户点击/输入的时候，把前一个定时器清除
+        clearTimeout(timer);
+       // 6、然后创建一个新的 setTimeout，这样就能保证点击按钮后的 interval 间隔内如果用户还点击了的话，就不会执行 fn 函数，并且会重新计算时间
+       // 这是一个闭包，第一次点击，隔1s调用fn，如果在这之前点击第二次，会将上一个定时器清除掉，创建一个新的定时器
+       // 总结：如果在time内点击多次，只有一次有效
+       timeout = setTimeout(() => {
+           fn.call(this, arguments);
+       }, 1000);
+    };
+}
+```
+
+### 防抖库—underscore.js-debounce(_.debounce(function, wait, [immediate]))
+
 ## 4.节流
+
+节流定时器写法：
+
+```javascript
+ // 2、节流函数体
+    function throttle(fn) {
+        // 4、通过闭包保存一个标记
+        let canRun = true;
+        return function() {
+            // 5、在函数开头判断标志是否为 true，如果为false 则中断函数
+            if(!canRun) {
+                return;
+            }
+            // 6、将 canRun 设置为 false，防止执行之前再被执行
+            // 第一次进来过if判断，给canRun赋值为false，接下来走定时器，在fn调用之前，如果再点击，
+            // !canRun的值为true，跳出函数不执行后面
+            // 总结：一个time之内只能执行一次事件处理函数
+            canRun = false;
+            // 7、定时器
+            setTimeout( () => {
+                fn.call(this, arguments);
+                // 8、执行完事件（比如调用完接口）之后，重新将这个标志设置为 true
+                canRun = true;
+            }, 1000);
+        };
+    }
+```
+
+### 防抖和节流对比
+
+**函数防抖(debounce)**
+
+**概念：** `在事件被触发n秒后再执行回调，如果在这n秒内又被触发，则重新计时。`
+
+**生活中的实例：** `如果有人进电梯（触发事件），那电梯将在10秒钟后出发（执行事件监听器），这时如果又有人进电梯了（在10秒内再次触发该事件），我们又得等10秒再出发（重新计时）。`
+
+**函数节流(throttle)**
+
+**概念：** `规定一个单位时间，在这个单位时间内，只能有一次触发事件的回调函数执行，如果在同一个单位时间内某事件被触发多次，只有一次能生效。`
+
+**生活中的实例：** `我们知道目前的一种说法是当 1 秒内连续播放 24 张以上的图片时，在人眼的视觉中就会形成一个连贯的动画，所以在电影的播放（以前是，现在不知道）中基本是以每秒 24 张的速度播放的，为什么不 100 张或更多是因为 24 张就可以满足人类视觉需求的时候，100 张就会显得很浪费资源。`
+
+**应用场景**
+
+对于函数防抖，有以下几种应用场景：
+
+- 给按钮加函数防抖防止表单多次提交。
+- 对于输入框连续输入进行AJAX验证时，用函数防抖能有效减少请求次数。
+- 判断`scroll`是否滑到底部，`滚动事件`+`函数防抖`
+
+> 总的来说，适合多次事件**一次响应**的情况
+
+对于函数节流，有如下几个场景：
+
+- 游戏中的刷新率
+- DOM元素拖拽
+- Canvas画笔功能
+
+> 总的来说，适合**大量事件**按时间做**平均**分配触发。
+
+**源码**
+
+**函数防抖：**
+
+```javascript
+function debounce(fn, wait) {
+  var timer = null;
+  return function () {
+      var context = this
+      var args = arguments
+      if (timer) {
+          clearTimeout(timer);
+          timer = null;
+      }
+      timer = setTimeout(function () {
+          fn.apply(context, args)
+      }, wait)
+  }
+}
+/*要防抖的函数*/
+var fn = function () {
+  console.log('boom')
+}
+
+setInterval(debounce(fn,500),1000) // 第一次在1500ms后触发，之后每1000ms触发一次
+
+setInterval(debounce(fn,2000),1000) // 不会触发一次（我把函数防抖看出技能读条，如果读条没完成就用技能，便会失败而且重新读条）
+```
+
+之所以返回一个函数，因为防抖本身更像是一个函数修饰，所以就做了一次函数柯里化。里面也用到了闭包，闭包的变量是`timer`。
+
+**函数节流—时间戳写法**
+
+```javascript
+function throttle(fn, gapTime) {
+  let _lastTime = null;
+  return function () {
+    let _nowTime = + new Date()
+    if (_nowTime - _lastTime > gapTime || !_lastTime) {
+      fn();
+      _lastTime = _nowTime
+    }
+  }
+}
+
+let fn = ()=>{
+  console.log('boom')
+}
+
+setInterval(throttle(fn,1000),10)
+```
+
+如图是实现的一个简单的函数节流，结果是`一秒打出一次boom`
+
+**小结**
+
+函数防抖和函数节流是**在时间轴上控制函数的执行次数**。防抖可以类比为`电梯不断上乘客`,节流可以看做`幻灯片限制频率播放电影`。
+
+### 节流库—underscore.js-throttle(_.throttle(function, wait, [options]))
 
 ## 5.懒加载
 
 JavaScript 类数组对象
+
+类数组对象转数组有两种花方法
+
+方法一：Array.from
+
+方法二：Array.prototype.slice.call
 
 1️⃣转换
 如果类数组对象需要转化为数组，可以用 Array.prototype.slice.call
@@ -52,6 +201,59 @@ Array.prototype.push.call(foo, 'PHP');
 总结：
 
 **call，apply，bind的本质是给对象添加一个新的方法，让这个对象能够调用这个方法**
+
+### 懒加载原理
+
+懒加载也叫延迟加载，指的是在长网页中延迟加载图像，是一种很好优化网页性能的方式。用户滚动到它们之前，可视区域外的图像不会加载。这与图像预加载相反，在长网页上使用延迟加载将使网页加载更快。在某些情况下，它还可以帮助减少服务器负载。常适用图片很多，页面很长的电商网站场景中。
+
++ 将页面上的图片的 src 属性设为空字符串，而图片的真实路径则设置在data-original属性中
+
++ 当页面滚动的时候需要去监听scroll事件,在scroll事件的回调中，判断我们的懒加载的图片是否进入可视区域
+  + 如果图片在可视区内,将图片的 src 属性设置为data-original 的值,这样就可以实现延迟加载
+  + 如果图片不在可视区不做处理
+
+```HTML
+<img src="" class="image-item" lazyload="true"  data-original="images/12.png"/>
+```
+
+```javascript
+//获取可视区高度，documentElement表示html元素
+var viewHeight =document.documentElement.clientHeight;
+// 绑定到document对象上，和获得鼠标位置的点击事件相同
+document.addEventListener("scroll",lazyload)
+function lazyload(){
+   var eles=document.querySelectorAll('img[data-original][lazyload]');
+   //给eles执行forEach函数，elses是类数组对象，不能直接调用数组方法，这里用了借用方法，见类数组对象转数组
+	 Array.prototype.forEach.call(eles,function(item,index){
+      var rect;
+      // 如果item.dataset.original===""，说明图片已经加载过了
+      if(item.dataset.original===""){
+           return;
+      }
+      // 获得元素相对于浏览器视窗的位置信息，包括width，height，top，left，bottom，right，x，y
+      rect=item.getBoundingClientRect();
+         // 如果占位图片的底边>=0,说明图片还没有向上移除视窗
+         // 如果占位图片的上边<可视区高度，说明图片还没有向下移除视窗
+         // 总结：图片刚好出现在视窗范围内
+         if(rect.bottom> 0 && rect.top < viewHeight){
+             // 将已经请求到浏览器的图片加载出来
+             !function(){
+                 var img=new Image()
+                 img.src=item.dataset.original
+                 // 当图片加载完成后执行
+                 img.onload=function(){
+                     item.src=img.src
+                 }
+                 item.removeAttribute("data-original")//移除属性，下次不再遍历
+                 item.removeAttribute("lazyload")
+            }()
+        }
+    })
+}
+lazyload()//刚开始还没滚动屏幕时，要先触发一次函数，初始化首页的页面图片
+```
+
+问题：为什么要新建一个img对象
 
 ## 6.无缝滚动——scrollTop/srollLeft
 
@@ -476,3 +678,8 @@ for (var i = 0; i < myLi.length; i++) {
 数组元素本身没有index属性，自定义一个，比方法一获取index方便好用
 
 > 对比方法一盒方法二：我觉得方法二更好，逻辑清晰，代码简单
+
+## 12.全屏滚动
+
+### 实现原理：
+

@@ -681,5 +681,199 @@ for (var i = 0; i < myLi.length; i++) {
 
 ## 12.全屏滚动
 
-### 实现原理：
+## 全屏滚动原理
+
+全屏滚动插件的实现原理是：所有滚动页面包在一个直接父级容器main中，容器及容器内的页面取当前可视区高度，同时容器的直接父级元素wrap设置 `overflow` 属性值设为 `hidden`，通过更改容器 `transform` 属性的 `translate` 或者 `top` 的值实现全屏滚动效果。
+
+### css全屏滚动
+
+全屏滚动分为：横屏滚动和竖屏滚动
+
+竖屏滚动：
+
+html：
+
+```html
+<div id="wrap">
+    <div id="main">
+        <div id="page1" class="page"></div>
+        <div id="page2" class="page"></div>
+        <div id="page3" class="page"></div>
+        <div id="page4" class="page"></div>
+    </div>
+</div>    
+```
+
+css
+
+```css
+html,body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+/*overflow: hidden;*/
+}
+#wrap{
+    height: 100%;
+    background: #ccc;
+}
+#main{
+    height: 100%;
+    background: brown;
+}
+.page{
+    height: 100%;
+}
+#page1{
+    background:#E4E;
+}
+#page2{
+    background:#6CE26C;
+}
+#page3{
+    background:#BF4938;
+}
+#page4{
+    background:#2932E1;
+}
+```
+
+横屏滚动：
+
+在竖屏滚动的基础上，给wrap设置width:400%;给page设置width:25%;
+
+问题1：html的代码为什么需要两个父元素？？
+
+这是为js做准备，第一个设置让滚动条消失，始终在视窗位置，第二个做移动容器
+
+问题2：设置overflow:hidden;的作用是去掉滚动条，这个属性设置在哪个元素上？？？
+
+设置在固定容器上
+
+### JS实现全屏滚动
+
+原理：同胶片和相机的视窗一样，wrap始终不同，main整体移动
+
+html：
+
+```html
+<div id="wrap">
+    <div id="main">
+        <div id="page1" class="page"></div>
+        <div id="page2" class="page"></div>
+        <div id="page3" class="page"></div>
+        <div id="page4" class="page"></div>
+    </div>
+</div>    
+```
+
+wrap块为窗口可看到的部分，我们可以通过js获取窗口可视区的大小，并为其设置overflow: hidden属性，使得窗口不出现滚动条，只显示窗口大小的一页内容；
+
+设置main定位为relative，通过改变main块的top属性实现不同页面的切换，具体的css代码如下：
+
+```css
+html,body{
+    margin: 0;
+    padding: 0;
+}
+/**/
+#wrap{
+	  width: 100%;   
+	  overflow: hidden;
+	  background: #ccc;
+    /*给wrap元素设置定高后，子元素超出父元素后，父元素wrap上回产生滚动条，如果不想要滚动条，
+    设置overflow:hidden;*/
+}
+/**/
+#main{
+	  width: 100%;
+	  background: #ccc;
+	  position: relative;
+    /*父元素的高度被子元素撑开了，height等于4个子元素高度，这里相当于胶片在相机中的移动，
+    wrap始终不动，main一格一格向上或向下，*/
+}
+.page{
+    width:100%;
+    margin:0;
+}
+#page1{
+    background:#E4E6CE;
+}
+#page2{
+    background:#6CE26C;
+}
+#page3{
+    background:#BF4938;
+}
+#page4{
+    background:#2932E1;
+}
+```
+
+js代码的主要部分就是对滚动事件的函数绑定，大多数浏览器提供了 **“mousewheel” 事件**，Firefox 3.5+不支持，但支持相同作用的事件：”DOMMouseScroll”；
+mousewheel事件的“event.wheelDelta” 属性值：返回的如果是正值说明滚轮是向上滚动；
+
+DOMMouseScroll事件“event.detail” 属性值：返回的如果是负值说明滚轮是向上滚动;
+
+Js:
+
+```javascript
+var wrap = document.getElementById("wrap");
+var main = document.getElementById("main");
+var pages = document.getElementsByClassName("page");
+// 视口高度
+var client_height = document.documentElement.clientHeight;
+
+// 设置包裹容器的高度为视口的高度
+wrap.style.height = client_height + "px";
+for(var i=0; i<pages.length; i++){
+    // 每个页面的高度也为视口高度
+	  pages[i].style.height = client_height + "px";
+}
+
+// 浏览器兼容性
+if(navigator.userAgent.toLowerCase().indexOf("firefox") != -1){
+	  document.addEventListener("DOMMouseScroll",scrollFun);
+}else if(document.addEventListener){
+	  document.addEventListener("mousewheel",scrollFun,false);
+}else if(document.attachEvent){
+	  document.attachEvent("onmousewheel",scrollFun);
+}else{
+	  document.onmousewheel = scrollFun;
+}
+
+//如果不加时间控制，滚动会过度灵敏，一次翻好几屏
+var startTime = 0, //翻屏起始时间  
+    endTime = 0,   //翻屏结束时间 
+    now = 0;       //当前main的定位top值
+/*
+* 第一屏时，now = 0;
+* 第二屏时，now = - client_height；
+* 第三屏时，now = - 2*client_height；
+* 第四屏时，now = - 3*client_height；
+*/
+
+//滚动事件处理函数
+function scrollFun(e){
+	  startTime = new Date().getTime();
+	  var event = e || window.event;
+//mousewheel事件中的 “event.wheelDelta” 属性值：返回的如果是正值说明滚轮是向上滚动
+//DOMMouseScroll事件中的 “event.detail” 属性值：返回的如果是负值说明滚轮是向上滚动
+	  var dir = event.detail || -event.wheelDelta;
+    // 两次滚动的时间超过1s
+	  if(startTime - endTime > 1000){
+      	// 如果滚轮向上滚动
+		    if(dir>0 && now > -3*client_height){
+			      now -= client_height; 
+			      main.style.top = now +"px";
+			      endTime = new Date().getTime();
+        // 滚轮向下滚动
+		    }else (dir<0 && now < 0){
+			      now += client_height;
+			      main.style.top = now +"px";
+			      endTime = new Date().getTime();
+		    }
+	  }
+}
+```
 

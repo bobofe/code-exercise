@@ -71,7 +71,8 @@
         document.onmousewheel = scrollFun;
     }
 
-    //如果不加时间控制，滚动会过度灵敏，一次翻好几屏
+    //如果不加时间控制，滚动会过度灵敏，一次翻好几屏，
+    // 这里也可以使用防抖
     var startTime = 0, //翻屏起始时间
         endTime = 0,
         now = 0;

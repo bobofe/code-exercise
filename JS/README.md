@@ -265,10 +265,10 @@ element.scrollLeft;滚动条到元素左边的距离
 
 滚动动画实现：主要运用animation动画：
 
-```
+```css
     @keyframes move{
-		0%{transform:translateX(0px);}
-		100%{transform:translateX(-2400px);}
+			0%{transform:translateX(0px);}
+			100%{transform:translateX(-2400px);}
     }
 ```
 
@@ -868,7 +868,7 @@ function scrollFun(e){
 			      main.style.top = now +"px";
 			      endTime = new Date().getTime();
         // 滚轮向下滚动
-		    }else (dir<0 && now < 0){
+		    }else if(dir<0 && now < 0){
 			      now += client_height;
 			      main.style.top = now +"px";
 			      endTime = new Date().getTime();
@@ -1031,4 +1031,149 @@ $(function(){
 | afterSlideLoad | 滚动到某一水平滑块后的回调函数，与 afterLoad 类似，接收 anchorLink、index、slideIndex、direction 4个参数 |
 | onSlideLeave   | 某一水平滑块滚动前的回调函数，与 onLeave 类似，接收 anchorLink、index、slideIndex、direction 4个参数 |
 
-### 
+```javascript
+var myFullpage = new fullpage('#fullpage', {
+  // 1.导航
+  menu: '#menu',  
+  //绑定菜单，设定的相关属性与 anchors 的值对应后，菜单可以控制滚动
+  lockAnchors: false, 
+  //（默认为false）确定URL中的锚是否在库中完全有效。 您仍然可以在函数和回调内部使用锚，但是它们在滚动网站时不起任何作用。 如果你想在URL中使用锚点来将fullPage.js和其他插件结合起来，那就很有用。
+  anchors:['firstPage', 'secondPage'], 
+  //定义要在每个部分的URL上显示的锚链接（#example）。 锚点的值应该是独一无二的。 数组中的锚的位置将限定锚被应用于哪些部分。
+  navigation: false, 
+  //如果设置为true，则会显示一个由小圆圈组成的导航栏
+  navigationPosition: 'right', 
+  //（默认none）可以设置为left或right，并定义导航栏显示的位置（如果使用的话）
+  navigationTooltips: ['firstSlide', 'secondSlide'], 
+  //（默认为[]）定义要使用导航圈的工具提示。 如果您愿意，也可以在每个部分中使用属性data-tooltip来定义它们
+  showActiveTooltip: false, 
+  //显示垂直导航中主动查看节的持久工具提示
+   slidesNavigation: false, 
+  //如果设置为true，则会显示一个导航栏，该导航栏由站点上每个横向滑块的小圆圈组成。
+  slidesNavPosition: 'bottom', 
+  //定义滑块的横向导航栏的位置。 值为top和bottom。
+
+  // 2.滚动
+  css3: true, 
+  //是否使用 CSS3 transforms 滚动
+  scrollingSpeed: 700, 
+  //滚动速度，单位为毫秒
+  autoScrolling: true, 
+  //是否使用插件的滚动方式，如果选择 false，则会出现浏览器自带的滚动条
+  fitToSection: true, 
+  //确定是否section放入视窗中
+  fitToSectionDelay: 1000, 
+  //如果fitToSection设置为true，则延迟 以毫秒为单位
+  scrollBar: false, 
+  //确定是否使用站点的滚动条。 在使用滚动条的情况下，autoScrolling功能仍将按预期工作。 用户也可以使用滚动条自由滚动网站，当滚动完成时，fullPage.js将适配屏幕上的部分。
+  easing: 'easeInOutCubic', 
+  //定义用于垂直和水平滚动的过渡效果。
+  easingcss3: 'ease', 
+  //定义在使用css3：true的情况下使用的过渡效果。
+  loopBottom: false, 
+  //滚动到最底部后是否滚回顶部
+  loopTop: false, 
+  //滚动到最顶部后是否滚底部
+  loopHorizontal: true, 
+  //定义水平滑块是否在到达上一张或上一张幻灯片后循环
+  continuousVertical: false, 
+  //是否循环滚动，与 loopTop 及 loopBottom 不兼容
+  normalScrollElements: '#element1, .element2',
+  //如果你想在滚动某些元素时避免自动滚动，这是你需要使用的选项
+  scrollOverflow: false, 
+  //内容超过满屏后是否显示滚动条
+  touchSensitivity: 15, 
+  //定义浏览器窗口宽度/高度的百分比，以及滑动到下一个节/幻灯片必须测量的距离
+  normalScrollElementTouchThreshold: 5, 
+  //定义html节点树的跳数阈值,Fullpage将测试normalScrollElements是否匹配，以允许在触摸设备上的div的滚动功能。
+  bigSectionsDestination: null, 
+  //定义如何滚动到比视口大的部分。 默认情况下，如果您来自目的地上方的部分，fullPage.js将滚动到顶部，如果您来自目的地之下的部分，则会滚动到底部。 可能的值是top，bottom，null。
+
+  // 3.可访问
+  keyboardScrolling: true, 
+  //定义是否可以使用键盘浏览内容
+  animateAnchor: true, 
+  //定义给定锚点（＃）的站点的负载是否会随着动画滚动到其目的地或直接加载给定部分
+  recordHistory: true, 
+  //定义是否将网站的状态推送到浏览器的历史记录。 设置为true时，网站的每个部分/幻灯片将作为新页面，浏览器的后退和前进按钮将滚动部分/幻灯片以达到网站的上一个或下一个状态。 当设置为false时，URL将保持更改，但不会影响浏览器的历史记录。 使用autoScrolling：false时，该选项会自动关闭。
+
+  // 4.设计
+  controlArrows: true, 
+  //确定是否将幻灯片的控制箭头向右或向左移动
+  verticalCentered: true, 
+  //在段落内部垂直居中。 当为true时，您的代码将被库包装。可考虑使用委托或在afterRender回调中加载其他脚本
+  sectionsColor : ['#ccc', '#fff'],
+  //为每个部分定义CSSbackground-color属性
+  paddingTop: '3em', 
+  //与顶部的距离
+  paddingBottom: '10px', 
+  //与底部距离
+  fixedElements: '#header, .footer', 
+  //定义当使用css3选项保持固定时，哪些元素将从插件的滚动结构中移除。 它需要一个字符串与这些元素的Javascript选择器。 （例如：fixedElements：'＃element1，.element2'）
+  responsiveWidth: 0, 
+  //一个正常的滚动（autoScrolling：false）将在定义的宽度下以像素为单位使用。 如果用户希望将自己的响应式CSS用于身体标记，则会将fp-responsive类添加到身体标记中。 例如，如果设置为900，则每当浏览器的宽度小于900时，插件将像正常站点一样滚动。
+  responsiveHeight: 0, 
+  //一个正常的滚动（autoScrolling：false）将在定义的高度下以像素为单位使用。 如果用户希望将自己的响应式CSS用于身体标记，则会将fp-responsive类添加到身体标记中。 例如，如果设置为900，则每当浏览器的高度小于900时，插件将像正常站点一样滚动。
+
+  // 4.自定义选择器
+  sectionSelector: '.section', 
+  //定义用于插件部分的Javascript选择器。 有时可能需要更改，以避免与使用与fullpage.js相同的选择器的其他插件的问题。
+  slideSelector: '.slide', 
+  //定义用于插件幻灯片的Javascript选择器。 有时可能需要更改，以避免与使用与fullpage.js相同的选择器的其他插件的问题。
+
+  lazyLoading: true, 
+  //延迟加载默认是激活的，这意味着它会延迟加载包含属性data-src的任何媒体元素
+
+  // 5.事件
+  onLeave: function(index, nextIndex, direction){},
+  //滚动前的回调函数，接收 index、nextIndex 和 direction 3个参数：index 是离开的“页面”的序号，从1开始；nextIndex 是滚动到的“页面”的序号，从1开始计算；direction 判断往上滚动还是往下滚动，值是 up 或 down。
+  afterLoad: function(origin, destination, direction){}, 
+  //滚动结束之后，一旦加载了节，就会触发回调。
+  afterRender: function(){}, 
+  //这个回调在页面结构生成后立即被触发,这是用来初始化其他插件的回调函数，或者触发任何需要文档准备就绪的代码
+  afterResize: function(width, height){},
+  //调整浏览器窗口大小后，会触发此回调。
+  afterResponsive: function(isResponsive){}, 
+  //在fullpage.js从正常模式变为响应模式或从响应模式变为正常模式之后，此回调将被触发
+  afterSlideLoad: function(section, origin, destination, direction){}, 
+  //滚动结束后，加载一个section的幻灯片后触发回调。
+  onSlideLeave: function(section, origin, destination, direction){} 
+  //一旦用户离开幻灯片转到另一个幻灯片，就会触发此回调。返回false将在移动发生之前取消移动。
+});
+```
+
+##### 延迟加载
+
+fullPage.js提供了一种延迟加载图像、视频和音频元素的方式，这样它们不会减慢网站的加载速度，也不会浪费数据传输。 当使用延迟加载时，所有这些元素只有在进入视口时才会加载。 要启用延迟加载，您只需将src属性更改为data-src，如下所示：
+
+```html
+<img data-src="image.png">
+<video>
+    <source data-src="video.webm" type="video/webm" />
+    <source data-src="video.mp4" type="video/mp4" />
+</video>
+```
+
+如果您已经使用另一个使用data-src的延迟加载解决方案，则可以通过设置 `lazyLoading: false`选项来禁用fullPage.js延迟加载。
+
+##### 自动播放
+
+对于视频或音频使用属性 autoplay，或者对于youtube iframe使用参数autoplay=1将使得在加载页面时播放媒体元素。 在段落/幻灯片载入使用而不是属性data-autoplay播放。 例如：
+
+```html
+<audio data-autoplay>
+    <source src="http://metakoncept.hr/horse.ogg" type="audio/ogg">
+</audio>
+```
+
+##### 暂停
+
+嵌入式HTML5<video>/<audio>和Youtube iframe在离开某个段落或幻灯片时自动暂停。 可以通过使用属性data-keepplaying来禁用。 例如：
+
+```html
+<audio data-keepplaying>
+    <source src="http://metakoncept.hr/horse.ogg" type="audio/ogg">
+</audio>
+```
+
+此外，fullpage.js还可以使用扩展插件，更多详情请查看fullpage.js项目官网

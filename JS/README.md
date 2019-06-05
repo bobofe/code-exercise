@@ -1177,3 +1177,196 @@ fullPage.js提供了一种延迟加载图像、视频和音频元素的方式，
 ```
 
 此外，fullpage.js还可以使用扩展插件，更多详情请查看fullpage.js项目官网
+
+### bootstrap实现滚动监听---scrollspy.js
+
+## 13.模态框
+
+### 遮罩层布局
+
+#### 方法一：传统方法(增加额外元素)
+
+增加一个额外的HTML元素用于遮挡背景
+
+```html
+<div class="overlay"></div>
+<div class="lightbox">
+    <div class="title">提示</div>
+    <div class="content">即将推出，敬请期待</div>
+    <div class="i_know">我知道了</div>
+</div>
+```
+
+```css
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height:100%;
+  background-color: rgba(0,0,0,.8);
+}
+.lightbox { /*需要引起用户注意的元素*/
+  width: 300px;
+  height: 200px;
+  background: red;
+  /*相对于body定位*/
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -150px;
+  margin-top: -100px;
+}
+.lightbox:after{
+  content: "×";
+  width: 30px;
+  height: 30px;
+  background-color: black;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+```
+
+lightbox盒子放在mask遮罩层之后，压在mask上
+
+这个方法的优点：稳定可靠，缺点：需要增加额外的HTML。
+
+#### 方法二：子压父
+
+```html
+<div class="mask">
+    <div class="warn">
+        <div class="title">提示</div>
+        <div class="content">即将推出，敬请期待</div>
+        <div class="i_know">我知道了</div>
+    </div>
+</div>
+```
+
+根据子压父原理，不需要设置层级关系
+
+**该方法的特点是遮罩层和弹出框无法滚动，但是页面的内容可以滚动。**
+
+如果想要出现遮罩层和弹框时页面禁止滚动，则可以使用如下方式：
+
+**1、在pc端可以给body设置overflow:hidden;**
+
+**2、在移动端则需要给遮罩层加一个在touchmove时禁止浏览器默认行为的操作：**
+
+```javascript
+$('.mask').on("touchmove",function(e){
+    e.preventDefault();
+});
+```
+
+#### 方法三：target方法
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/:target
+
+**传统方法+target**
+
+html
+
+```html
+<ul>
+  <li><a href="#example1">Open example #1</a></li>
+  <li><a href="#example2">Open example #2</a></li>
+</ul>
+
+<div class="lightbox" id="example1">
+  <figure>
+    <a href="#" class="close"></a>
+    <figcaption>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      Donec felis enim, placerat id eleifend eu, semper vel sem.</figcaption>
+  </figure>
+</div>
+
+<div class="lightbox" id="example2">
+  <figure>
+    <a href="#" class="close"></a>
+    <figcaption>Cras risus odio, pharetra nec ultricies et,
+      mollis ac augue. Nunc et diam quis sapien dignissim auctor.
+      Quisque quis neque arcu, nec gravida magna.</figcaption>
+  </figure>
+</div>
+```
+
+css
+
+```css
+/* Unopened lightbox */
+.lightbox {
+  display: none;
+}
+
+/* Opened lightbox */
+.lightbox:target {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Lightbox content */
+.lightbox figcaption {
+  width: 25rem;
+  position: relative;
+  padding: 1.5em;
+  background-color: lightpink;
+}
+
+/* Close button */
+.lightbox .close {
+  position: relative;
+  display: block;
+}
+
+.lightbox .close::after {
+  width: 2rem;
+  height: 2rem;
+  background-color: black;
+  border-radius: 50%;
+  color: white;
+  content: "×";
+  cursor: pointer;
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Lightbox overlay */
+.lightbox .close::before {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,0,0,.7);
+  content: "";
+  cursor: default;
+}
+```
+
+效果图：
+
+![img](images/遮罩1.png)
+
+### 模态框实例
+
+传统方法 

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>子压父</title>
+    <style>
+        .mask{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width:100%;
+            height:100%;
+            background-color: rgba(0,0,0,.3);
+        }
+        .warn { /*需要引起用户注意的元素*/
+            width: 300px;
+            height: 200px;
+            background: red;
+            /*相对于body定位*/
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -150px;
+            margin-top: -100px;
+        }
+        .warn:after{
+            content: "×";
+            width: 30px;
+            height: 30px;
+            background-color: black;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            position: absolute;
+            top: -1rem;
+            right: -1rem;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div class="mask">
+    <div class="warn">
+        <div class="title">提示</div>
+        <div class="content">即将推出，敬请期待</div>
+        <div class="i_know">我知道了</div>
+    </div>
+</div>
+</body>
+</html>

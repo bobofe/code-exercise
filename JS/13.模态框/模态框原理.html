@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模态框</title>
+    <style>
+        *{margin:0;padding:0;}
+        body{
+            width:100%;
+            height:10000000px;
+        }
+        #mask{
+            display:none;
+            background:rgba(0,0,0,0.3);
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            position:fixed; /*利用固定定位的好处：页面还可以上下翻动，但是始终处于灰色背景下*/
+        }
+        #login{
+            display:none;
+            background:white;
+            width:400px;
+            height:250px;
+            position:absolute;
+            left:50%;
+            top:50%;
+            margin-left:-200px;
+            margin-top:-125px;
+        }
+        /*关闭按钮，写成一个元素而不是伪元素，是为了方便获取元素，绑定事件*/
+        #login #close_login{
+            position:absolute;
+            left:350px;
+            top:10px;
+            font-size:20px;
+            width:20px;
+            height:20px;
+            text-align: center;
+            background:skyblue;
+            cursor:pointer;
+            line-height: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="mask"></div>
+<div id="login">
+    <span id="close_login">×</span>
+</div>
+<a href="javascript:;" id="btn">请登录</a>
+<script>
+    window.onload=function(){
+        var btn=document.getElementById("btn");
+        var mask=document.getElementById("mask");
+        var login=document.getElementById("login");
+        btn.onclick=function(){
+            mask.style.display="block";
+            login.style.display="block";
+        };
+        var close_login=document.getElementById("close_login");
+        close_login.onclick=function(){
+            mask.style.display="none";
+            login.style.display="none";
+        };
+    };
+</script>
+</body>
+</html>

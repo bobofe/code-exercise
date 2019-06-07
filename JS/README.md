@@ -862,7 +862,7 @@ function scrollFun(e){
 	  var dir = event.detail || -event.wheelDelta;
     // 两次滚动的时间超过1s
 	  if(startTime - endTime > 1000){
-      	// 如果滚轮向上滚动
+      	// 如果滚轮向上滚动，且当前top值>-3*client_height(没有滚动到最底端)
 		    if(dir>0 && now > -3*client_height){
 			      now -= client_height; 
 			      main.style.top = now +"px";
@@ -1369,4 +1369,14 @@ css
 
 ### 模态框实例
 
-传统方法 
+传统方法 ，见代码
+
+## 14.视差滚动
+
+### 视差滚动原理
+
+待解决
+
+### 视差滚动插件
+
+待解决

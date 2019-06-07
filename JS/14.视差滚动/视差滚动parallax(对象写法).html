@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>视差滚动——对象写法</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            height: 100%;
+            margin: auto;
+        }
+
+        .container .section {
+            color: #fff;
+            /*margin-bottom: 100px;*/
+            /*height: 300px;*/
+            padding: 0 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .section .h1 {
+            display: block;
+            font-size: 2em;
+            padding: .5em 0;
+            line-height: 100px;
+        }
+
+        .container .section:first-child {
+            margin-top: 100px;
+        }
+
+        .container .section:nth-of-type(2) {
+            background: #F56C6C;
+        }
+
+        .container .section:nth-of-type(3) {
+            background: #409EFF;
+        }
+    </style>
+</head>
+<body>
+<article class="container">
+    <section class="rellax section">
+        <span class="h1">序章一：儒家</span>
+        <p>
+            道法自然，唯礼匡之。天、地、君、亲、师。
+        </p>
+    </section>
+    <section class="rellax-element section" data-rellax-speed="1">
+        <span class="h1">序章二：道家</span>
+        <p>道法自然，无为而有为，无法而有法</p>
+    </section>
+    <section class="rellax-element section" data-rellax-speed="3">
+        <span class="h1">序章三：法家</span>
+        <p>术以知奸，以刑止刑，赏善不遗匹夫，刑过不避大臣，天地之法，执行不怠。</p>
+    </section>
+</article>
+<script>
+    ;(function(root, undefined) {
+        const doc = root.document;
+        const htmlEle = doc.documentElement;
+
+        const Rellax = function () {
+            this.rellaxes = null;
+            this.currentPosition = 0;
+            this.init();
+        };
+
+        Rellax.prototype = {
+            init: function() {
+                let rellaxes = doc.querySelectorAll('.rellax-element');
+                rellaxes = rellaxes ? [...rellaxes] : [];
+                this.rellaxes = rellaxes;
+                this.currentPosition = 1;
+                this.scroll(this.currentPosition);
+                this.onEvents();
+            },
+            scroll: function(val, isTop) {
+                this.rellaxes.forEach(item => {
+                    const speed = item.getAttribute('data-rellax-speed');
+                    item.style.cssText = `transform: translateY(${speed * val}px)`;
+                });
+            },
+            onEvents: function() {
+                const that = this;
+                const pos = this.currentPosition;
+                window.addEventListener('scroll', function(e) {
+                    const scrollTop = htmlEle.scrollTop ||
+                        window.pageYOffset ||
+                        doc.body.scrollTop;
+                    if (htmlEle.scrollHeight - 5 <= htmlEle.clientHeight + scrollTop) return;
+                    const isToTop = scrollTop < pos;
+                    const currPos = isToTop ? scrollTop - pos : pos - scrollTop;
+                    that.currentPosition = currPos;
+                    that.scroll(currPos, isToTop);
+                });
+            }
+        };
+
+        new Rellax();
+
+    })(window);
+</script>
+</body>
+</body>
+</html>

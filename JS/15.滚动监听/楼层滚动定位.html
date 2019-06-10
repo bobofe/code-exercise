@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>楼层滚动定位</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        i {
+            font-style: normal;
+        }
+
+        ul, li, dl, ol {
+            list-style: none;
+        }
+
+        #LoutiNav {
+            border: 1px solid gray;
+            width: 30px;
+            position: fixed;
+            top: 150px;
+            left: 50px;
+            display: none;
+        }
+
+        #LoutiNav li {
+            width: 30px;
+            height: 30px;
+            border-bottom: 1px solid gray;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #LoutiNav span {
+            display: none;
+        }
+
+        #LoutiNav .active {
+            background: white;
+            color: darkred;
+        }
+
+        #LoutiNav li:hover span {
+            display: block;
+            font-size: 12px;
+            background: darkred;
+            color: white;
+        }
+
+        #LoutiNav li:hover i {
+            display: none;
+        }
+
+        #goTop {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: gray;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #goTop:hover {
+            background: darkred;
+            color: white;
+        }
+
+        #goTop:hover span {
+            display: block;
+        }
+
+        #header {
+            height: 200px;
+            background: palegoldenrod;
+            text-align: center;
+            line-height: 200px;
+            font-size: 72px;
+            margin: 0 auto;
+        }
+
+        .louceng {
+            height: 810px;
+            width: 1440px;
+            text-align: center;
+            line-height: 800px;
+            font-size: 120px;
+            margin: 0 auto;
+        }
+
+        #erweima {
+            width: 130px;
+            height: 130px;
+            background: palegreen;
+            display: none;
+            position: absolute;
+            right: 46px;
+            bottom: 5px;
+            line-height: 130px;
+            text-align: center;
+            font-size: 20px;
+            border-radius: 10px;
+        }
+    </style>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.js"></script>
+</head>
+<body>
+<ul id="LoutiNav">
+    <li class="active"><i>1F</i><span>服饰</span></li>
+    <li><i>2F</i><span>美妆</span></li>
+    <li><i>3F</i><span>手机</span></li>
+    <li><i>4F</i><span>家电</span></li>
+    <li><i>5F</i><span>数码</span></li>
+    <li><i>6F</i><span>运动</span></li>
+    <li><i>7F</i><span>居家</span></li>
+    <li><i>8F</i><span>母婴</span></li>
+    <li><i>9F</i><span>食品</span></li>
+    <li><i>10F</i><span>图书</span></li>
+    <li style="border-bottom: none;"><i>11F</i><span>服务</span></li>
+</ul>
+<div id="goTop">
+    <span id="erweima">我是二维码</span>
+    Top
+</div>
+<div id="header">头部</div>
+<div id="main">
+    <div class="louceng" style="background: papayawhip;">服饰</div>
+    <div class="louceng" style="background: peachpuff;">美妆</div>
+    <div class="louceng" style="background: peru;">手机</div>
+    <div class="louceng" style="background: pink;">家电</div>
+    <div class="louceng" style="background: palegoldenrod;">数码</div>
+    <div class="louceng" style="background: plum;">运动</div>
+    <div class="louceng" style="background: powderblue;">居家</div>
+    <div class="louceng" style="background: rosybrown;">母婴</div>
+    <div class="louceng" style="background: cornflowerblue">食品</div>
+    <div class="louceng" style="background: mediumpurple;">图书</div>
+    <div class="louceng" style="background: darkslateblue;">服务</div>
+</div>
+<script type="text/javascript">
+    var oNav = $('#LoutiNav');        // 导航壳
+    var aNav = oNav.find('li');       // 导航
+    var aDiv = $('#main .louceng');   // 楼层
+    var oTop = $('#goTop');           // 回到顶层按钮
+
+    // 滚动监听函数
+    $(window).scroll(function () {
+        console.log($(this));  // this指向window
+        var winH = $(window).height();        // 可视窗口高度
+        var iTop = $(window).scrollTop();     // 滚动条距离顶部的距离
+
+
+        // 如果滚动条距离顶部的距离大于header部分的高度，显示楼层导航，显示回到顶层按钮，否则都隐藏
+        if (iTop >= $('#header').height()) {
+            oNav.fadeIn();
+            oTop.fadeIn();
+
+            // 滚动条高度改变，楼层样式改变
+            aDiv.each(function () {
+                // 如果可视窗口的高度 + 滚动条距离顶部的距离
+                if (winH + iTop - $(this).offset().top > winH / 2) {
+                    // 先将导航li上的类移除
+                    aNav.removeClass('active');
+                    // eq(index): 从匹配的元素集合中取得一个指定位置的元素，index从0开始
+                    console.log($(this));
+                    // 给对应的li增加一个active类
+                    console.log($(this).index());
+                    // each()方法中的回调函数是在当前DOM元素为上下文的语境中触发的。因此关键字 this 总是指向这个元素
+                    aNav.eq($(this).index()).addClass('active');
+                }
+            })
+        } else {
+            oNav.fadeOut();
+            oTop.fadeOut();
+        }
+    })
+
+    // 点击top回到顶部
+    oTop.click(function () {
+        $('body,html').animate({"scrollTop": 0}, 500)
+    })
+
+    // 点击楼层li回到当前楼层块
+    aNav.click(function () {
+        // eq(index): 从匹配的元素集合中取得一个指定位置的元素，index从0开始
+        // index(): 返回指定元素相对于其他指定元素的 index 位置。
+        var t = aDiv.eq($(this).index()).offset().top;
+        $('body,html').animate({"scrollTop": t}, 500);
+        // 给当前元素增加active类，同时给它的兄弟元素去掉active类
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+</script>
+</body>
+</html>

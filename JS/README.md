@@ -1380,3 +1380,170 @@ css
 ### 视差滚动插件
 
 待解决
+
+## 15.滚动监听
+
+### 原理：
+
+通过监听滚动条距离顶部的距离，执行相应的操作，核心代码：
+
+```javascript
+var t = document.documentElement.scrollTop || document.body.scrollTop;
+```
+
+#### 两种监听页面滚动的方法
+
+##### ①原生js通过window.onscroll监听
+
+```javascript
+window.onscroll = function() {
+  //为了保证兼容性，这里取两个值，哪个有值取哪一个
+  //scrollTop就是触发滚轮事件时滚轮的高度
+  var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  console.log("滚动距离" + scrollTop);
+}
+```
+
+##### ②Jquery通过$(window).scroll()监听
+
+```javascript
+$(window).scroll(function() {
+  //为了保证兼容性，这里取两个值，哪个有值取哪一个
+  //scrollTop就是触发滚轮事件时滚轮的高度
+  var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  console.log("滚动距离" + scrollTop);
+})
+```
+
+#### 将页面滚动到指定位置
+
+主要使用的是锚点技术，锚点元素通过scrollTop值改变进行定位。
+
+##### 方法一 直接使用scrollTop
+
+使用scrollTop方法，x为滚轮的高度`$("body,html").scrollTop(x);`
+
+加动画的滚动
+
+```javascript
+// 滚动到指定位置
+$('html, body').animate({  
+  scrollTop: $("#div1").offset().top  
+}, 2000);  
+// 滚动到顶部，指定距顶部的距离
+$('.scroll_top').click(function(){
+  $('html,body').animate({
+    scrollTop: '0px'
+  }, 800);
+ });
+```
+
+##### 方法二 利用hash
+
+hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）。
+location.hash=anchorname。
+
+例如：以下地址的hash为#hot
+
+`http://this.summer.io/is/#hot`    等于  location.hash → #hot
+
+以下函数将页面定位到title元素
+
+```javascript
+function aa(){
+   window.location.hash = "#title";  
+}
+```
+
+##### 方法三 直接使用超链接锚点
+
+点击a标签页面将会定位到anchor1元素
+
+```html
+<a href="#anchor1">锚点1</a>
+```
+
+
+
+知识仓库
+
+```javascript
+//网页可见区域宽：
+document.body.clientWidth;
+//网页可见区域高：
+document.body.clientHeight;
+//网页可见区域宽（包括边线的宽）：
+document.body.offsetWidth;
+//网页可见区域高（包括边线的高）：
+document.body.offsetHeight;
+//网页正文全文宽：
+document.body.scrollWidth;
+//网页正文全文高：
+document.body.scrollHeight;
+//距离页面顶部的距离：
+document.body.scrollTop;
+//网页滚动左：
+document.body.scrollLeft;
+```
+
+
+
+通过下面这段js代码就能够实现当页面从顶部向下滑动超过300px时，返回顶部的图片出现，并且点击图片，页面平滑的移动到页面顶部。
+
+```html
+<div class="uptop" id="uptop">
+   <img src="images/up.png" id="to-top">//这里用了一个向上的箭头图片，用于表明返回顶部
+</div>
+```
+
+```javascript
+window.onscroll = function(){ 
+  //获取滚动条距离页面顶部的距离
+  var t = document.documentElement.scrollTop || document.body.scrollTop;  
+  var uptop = document.getElementById( "uptop" ); //获取div元素
+  if( t >= 300 ) { //当距离顶部超过300px时
+      uptop.style.bottom=30+'px';//使div距离底部30px，也就是向上出现
+  } else { //如果距离顶部小于300px
+      uptop.style.bottom=-50+'px';//使div向下隐藏
+  } 
+} 
+
+var top=document.getElementById("to-top");//获取图片元素
+var timer=null;
+top.onclick = function(){ //点击图片时触发点击事件
+   timer=setInterval(function(){ //设置一个计时器
+     //获取距离顶部的距离
+     var ct = document.documentElement.scrollTop || document.body.scrollTop; 
+   	 ct-=10;
+     if(ct>0){//如果与顶部的距离大于零
+         window.scrollTo(0,ct);//向上移动10px
+     }else{//如果距离小于等于零
+         window.scrollTo(0,0);//移动到顶部
+         clearInterval(timer);//清除计时器
+     }
+   },10);//隔10ms执行一次前面的function，展现一种平滑滑动效果
+}
+```
+
+
+
+### 插件：
+
+#### onepage-scroll.js
+
+https://github.com/peachananr/onepage-scroll
+
+## 16.下拉菜单
+
+## 17.工具提示
+
+## 18.警告框
+
+## 19.手风琴效果
+
+## 20.音频播放器
+
+https://blog.csdn.net/s1879046/article/details/77898167
+
+
+

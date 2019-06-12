@@ -1,0 +1,30 @@
+
+.c::before,.c::after{
+    content: '';
+    display: table;
+}
+.c::after{
+    clear: both;
+}
+.red{
+    width: 100px;
+    background-color:red;
+    float: left;
+    height: 300px;
+}
+
+.blue{
+    background-color:blue;
+}
+.green{
+    background-color: green;
+}
+.yellow{
+    background-color: yellow;
+}
+.yellow,.green,.blue{
+    width: 20px;
+    float: left;
+    height: 300px;
+}
+

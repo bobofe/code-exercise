@@ -1,0 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.li{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+}
+.accordion{
+    width:938px;
+    height:128px;
+    border: 1px solid #d3d3d3;
+}
+.accordion ul li{
+    width: 156px;
+    height: 128px;
+    float: left;
+    overflow: hidden;
+}
+.accordion ul li a{
+    display: block;
+    height: 128px;
+    width: 156px;
+    position: relative;
+    overflow: hidden;
+}
+.accordion img{
+    position: absolute;
+    right: -15px;
+    bottom: 0;
+    height: 72px;
+    width: 117px;
+    overflow: hidden;
+}
+.accordion .info{
+    position: absolute;
+    top: 0;
+    left: 0;width: 136px;
+    padding: 4px 10px;
+}
+.accordion .info h3{
+    font-size: 14px;
+    font-weight: 700;
+}
+.accordion .info p{
+    color: #868686;
+    font-size: 12px;
+    width:136px;
+    height: 22px;
+    line-height: 22px;
+    overflow: hidden;
+}
+.accordion .info .price{
+    font-size: 14px;
+    font-style: italic;
+    color: #fa2a5d;
+    height: 35px;
+}
+.accordion .line{
+    width: 0px;
+    height: 0px;
+    height: 128px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-right: 1px dashed #cacaca;
+}
+.accordion .mask{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 156px;
+    height: 128px;
+    opacity: 0;
+    background-color: #000;
+}
+.accordion:hover .mask{
+    opacity: 0.3;
+}
+
+.accordion li.big,.accordion li.big a{
+    width: 314px;
+}
+.accordion li.big img{
+    width: 195px;
+    height: 120px;
+    right: 0;
+    bottom: 0;
+}
+.accordion li.big .info{
+    width: 290px;
+}
+.accordion li.big h3{
+    font-size: 18px;
+}
+.accordion li.big p{
+    font-size: 14px;
+    width: 166px;
+}
+.accordion li.big p.price{
+    font-size: 16px;
+    padding-top: 7px;
+}
+.accordion li.big .mask{
+    opacity: 0;
+}

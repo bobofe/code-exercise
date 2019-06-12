@@ -1535,11 +1535,100 @@ https://github.com/peachananr/onepage-scroll
 
 ## 16.下拉菜单
 
-## 17.工具提示
+html结构：使用滑动门效果
+
+```html
+<div class="dropdown">
+  <a id="dLabel" href="http://example.com" data-toggle="dropdown" >
+    Dropdown trigger
+    <span class="caret"></span> 
+    <!-- 小箭头 -->
+  </a>
+  <ul class="dropdown-menu">
+    ...
+  </ul>
+</div>
+```
+
+## 17.工具提示tooltip
+
+定位一个伪元素到父元素之外
 
 ## 18.警告框
 
+```html
+<div class="alert">
+  <button type="button" class="close"><span aria-hidden="true">&times;</span></button>
+  <strong>Warning!</strong> Better check yourself, you're not looking too good.
+</div>
+```
+
 ## 19.手风琴效果
+
+方法一：css+animation
+
+方法二：target
+
+方法三：js
+
+### 原理
+
+如果不要求有动画效果，通过操作class完成，class为要实现的效果
+
+首先将所有元素的特定class值去除(清空)，事件发生时，给当前元素加上该class值
+
+>  this = event.currentTarget 等于绑定事件的元素，谁绑定就是谁
+>  event.target 是由于冒泡原理而实际触发事件的元素，谁触发就是谁
+>
+> 触发的不一定是绑定的，有可能是绑定元素的子元素
+
+注意：通过元素的width获得的宽度由单位px，需要进行处理，通过offsetWidth获得的为数值，不需要处理
+
+有动画效果的手风琴
+
+```javascript
+function accordion() {
+    var Div = document.getElementById('c');
+    var Divs = Div.getElementsByTagName('p');
+    // 定时器
+    var t = null;
+    for(var i = 0; i < Divs.length; i++) {
+        // 数组或对象的自定义属性
+        Divs[i].index = i;
+        Divs[i].onmouseover = function() {
+            // 将数组或对象的自定义属性赋值给index
+            var index = this.index;
+            // 进来先清定时器，如果定时器不为null,清除定时器
+            if(t) {
+                clearInterval(t);
+            }
+            t = setInterval(function() {
+               // 父元素的总宽度为500
+                var iWidth = 500;
+                // 一共5个元素
+                for(i = 0; i < Divs.length; i++) {
+                    // 如果div不是当前触发事件的div
+                    if(index != Divs[i].index) {
+                        // Divs[i].offsetWidth最大值为420，最小为20
+                        // 当div的offsetWidth为20时，speed为0
+                        // 当div的offsetWidth为420时，speed为-80，iSpeed的值再不断减小
+                        var iSpeed = (20 - Divs[i].offsetWidth) / 5;
+                        iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
+                        Divs[i].style.width = Divs[i].offsetWidth + iSpeed + 'px';
+                        // 总宽度 - 4个元素的宽度就等于剩下的那个元素的宽度
+                        iWidth -= Divs[i].offsetWidth;
+                    };
+                };
+                // 
+                Divs[index].style.width = iWidth + 'px';
+            }, 30);
+        };
+    }
+}
+accordion();
+```
+
+
 
 ## 20.音频播放器
 

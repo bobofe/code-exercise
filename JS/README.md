@@ -1628,9 +1628,133 @@ function accordion() {
 accordion();
 ```
 
+## 20.获取一个元素样式的函数
 
+```javascript
+function getCSS(obj,style){
+    if(window.getComputedStyle){
+        return getComputedStyle(obj)[style];
+    }
+    //兼容IE
+    return obj.currentStyle[style];
+}
+```
 
-## 20.音频播放器
+## 21.解析URL字符串的函数
+
+```javascript
+function getQueryStringArgs(){
+    //取得查询字符串并去掉开头的问号
+    var qs = location.search.length > 0  ? location.search.substring(1) : "";
+    //保存数据的对象
+    var args = {};
+    //取得每一项
+    var items = qs.length ? qs.split("&") : [];
+    var item,name,value;
+    var len = items.length;
+    //逐个将每一项添加到args对象中
+    for(var i = 0; i < len; i++){
+        item = items[i].split("=");
+        name = decodeURIComponent(item[0]);
+        value = decodeURIComponent(item[1]);
+        if(name.length){
+            args[name] = value;
+        }
+    }
+    return args;
+}
+location.search = "?name=abc&password=123&callback=fn";
+console.log(getQueryStringArgs());//[name: "abc", password: "123", callback: "fn"]
+```
+
+## 22.命名空间写法
+
+```javascript
+var GLOBAL = {};
+GLOBAL.namespace = function(str){
+    var arr = str.split('.');
+    var o = GLOBAL;
+    var start = 0;
+    if(arr[0] == 'GLOBAL'){
+        start = 1;
+    }else{
+        start = 0;
+    }
+    for(var i = start; i < arr.length; i++){
+        o[arr[i]] = o[arr[i]] || {};
+        o = o[arr[i]];
+    }
+};
+//功能A
+(function(){
+    var a = 1;
+    var b = 2;
+    GLOBAL.namespace('A.CAT');
+    GLOBAL.namespace('A.DOG');
+    GLOBAL.A.CAT.name = 'mimi';
+    GLOBAL.A.DOG.name = 'xiaobai';
+    GLOBAL.A.CAT.move = function(){};
+    GLOBAL.A.str1 = a;
+    GLOBAL.A.str = b;
+    alert(a+b);//3
+})();
+//功能B
+(function(){
+    var a = 2;
+    var b = 1;
+    GLOBAL.namespace('B');
+    GLOBAL.B.str1 = a;
+    alert(a-b);//1
+})();
+//功能C
+(function(){
+    var a = GLOBAL.A.str1;
+    var b = GLOBAL.A.str;
+    alert(a*b);//2
+})();
+//功能D
+(function(){
+    var a = GLOBAL.B.str1;
+    alert(a*2);//4
+})();
+```
+
+## 23.location的hasChange事件
+
+```javascript
+//非IE浏览器
+window.onhashchange = function(e){
+    e = e || event;
+    console.log(e.oldURL,e.newURL);
+}
+//所有IE浏览器都不支持oldURL和newURL这两个属性，可以通过定期检查location.hash属性来模拟
+(function(window) {
+    if ( "onhashchange" in window.document.body ) { return; }
+
+    var location = window.location;
+    var oldURL = location.href;
+    var oldHash = location.hash;
+
+    // 每隔100毫秒检查一下URL的hash
+    setInterval(function() {
+        var newURL = location.href;
+        var newHash = location.hash;
+
+        if ( newHash != oldHash && typeof window.onhashchange === "function" ) {
+            window.onhashchange({
+                type: "hashchange",
+                oldURL: oldURL,
+                newURL: newURL
+            });
+
+            oldURL = newURL;
+            oldHash = newHash;
+        }
+    }, 100);
+})(window);
+```
+
+## 24.音频播放器
 
 https://blog.csdn.net/s1879046/article/details/77898167
 

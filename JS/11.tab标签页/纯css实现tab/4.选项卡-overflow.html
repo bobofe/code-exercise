@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .show{
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            background: cornflowerblue;
+            overflow: hidden;
+            list-style: none;
+            font-size: 50px;
+        }
+        .show-in{
+            width: 100px;
+            height: 100px;
+        }
+        .con{
+            width: 100px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .con-in{
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <ul class="show">
+        <li class="show-in" id="one">1</li>
+        <li class="show-in" id="two">2</li>
+        <li class="show-in" id="three">3</li>
+        <li class="show-in" id="four">4</li>
+    </ul>
+    <nav class="con">
+        <a href="#one" class="con-in">1</a>
+        <a href="#two" class="con-in">2</a>
+        <a href="#three" class="con-in">3</a>
+        <a href="#four" class="con-in">4</a>
+    </nav>
+</div>
+</body>
+</html>

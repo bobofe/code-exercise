@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>焦点图2.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<style>
+		*{padding:0;margin:0;list-style: none;border:0;}
+		.all
+		{
+			width: 500px;
+			height: 200px;
+			padding: 7px;
+			border: 1px solid #ccc;
+			margin: 100px auto;
+			position: relative;
+		}
+		.screen
+		{
+			width: 500px;
+			height: 200px;
+			overflow: hidden;
+			position: relative;
+		}
+		.screen li
+		{
+			width: 500px;
+			height: 200px;
+			overflow: hidden;
+			float: left;
+		}
+		.screen ul
+		{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 3000px;
+		}
+		.all ol
+		{
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+			line-height:20px;
+			text-align: center;
+		}
+		.all ol li
+		{
+			float: left;
+			width: 20px;
+			height: 20px;
+			background: #fff;
+			border: 1px solid #ccc;
+			margin-left: 10px;
+			cursor: pointer;
+		}
+		.all ol li.current
+		{
+			background: yellow;
+		}
+	</style>
+  </head>
+  
+  <body>
+    <div	class="all" id="all">
+    	<div class="screen">
+    		<ul id="ul">
+    			<li><img src="images/1.jpg" /></li>
+    			<li><img src="images/2.jpg"/></li>
+    			<li><img src="images/3.jpg" /></li>
+    			<li><img src="images/4.jpg" /></li>
+    			<li><img src="images/5.jpg" /></li>
+    		</ul>
+    	</div>
+    </div>
+  </body>
+</html>
+<script>
+	function animate(obj,target)
+	{
+		clearInterval(obj.timer);
+		var speed = obj.offsetLeft < target ? 15 : -15;  
+		obj.timer = setInterval(function(){
+			var result = target - obj.offsetLeft;
+			obj.style.left = obj.offsetLeft + speed + "px";
+			if(Math.abs(result)<=15)
+			{
+				clearInterval(obj.timer);
+				obj.style.left = target + "px";
+			}
+		},10);
+	}
+	var box = document.getElementById("all");
+	var ul = document.getElementById("ul");
+	var ulLis = ul.children;
+	ul.appendChild(ul.children[0].cloneNode(true));
+	var ol = document.createElement("ol");
+	box.appendChild(ol);
+	for(var i = 0; i < ulLis.length - 1;i++)
+	{
+		var li = document.createElement("li");
+		li.innerHTML = i+1;
+		ol.appendChild(li);
+	}
+	ol.children[0].className = "current";
+	
+	var olLis = ol.children;
+	for(var i = 0; i < olLis.length;i++)
+	{
+		olLis[i].index = i;
+		olLis[i].onmouseover = function()
+		{
+			for(var j = 0; j < olLis.length;j++)
+			{
+				olLis[j].className = "";
+			}
+			this.className = "current";
+			animate(ul,-this.index*500);
+			square = key= this.index;
+		}
+	}
+	
+	var timer = null;
+	var key = 0;
+	var square = 0;
+	timer = setInterval(autoplay,1000);
+	function autoplay()
+	{
+		key++;
+		if(key > ulLis.length-1)
+		{
+			ul.style.left = 0;
+			key = 1;
+		}
+		animate(ul,-key*500);
+		square++;
+		if(square > olLis.length-1)
+		{
+			square = 0;
+		}
+		for(var i = 0;i < olLis.length-1;i++)
+		{
+			olLis[i].className="";
+		}
+		olLis[square].className = "current";
+	} 
+	box.onmouseover = function()
+	{
+		clearInterval(timer);
+	}
+	box.onmouseout = function()
+	{
+		timer = setInterval(autoplay,1000);
+	}
+	
+
+
+
+
+
+
+
+
+
+
+
+</script>

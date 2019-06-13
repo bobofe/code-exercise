@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>缓冲动画原理.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<style type="text/css">
+		div
+		{
+			width: 100px;
+			height: 100px;
+			background-color: pink;
+			position: absolute;
+			left: 0;
+		}
+	</style>
+	<script type="text/javascript">
+		window.onload = function()
+		{
+			var btn = document.getElementById("btn");
+			var box = document.getElementById("box");
+			var target = 400;
+			var timer = null;
+			btn.onclick = function()
+			{
+				timer = setInterval(function(){
+					var step = (target - box.offsetLeft)/10;  //步长
+					step = step > 0 ? Math.ceil(step) : Math.floor(step);  //步长取整
+					box.style.left = box.offsetLeft + step + "px";
+					if(target == box.offsetLeft)
+					{
+						clearInterval(timer);
+					} 
+				},30);
+			}
+		}
+	</script>
+  </head>
+  
+  <body>
+    <button id="btn">开始 </button>
+    <div id="box"></div>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>旋转木马.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/css.css">
+    <script type="text/javascript" src="js/animate.js"></script>
+    <script type="text/javascript">
+    	window.onload = function()
+    	{
+    		var wrap = document.getElementById("wrap");  // 大盒子
+   			var arrow = document.getElementById("arrow");  // 三角
+    		var slider = document.getElementById("slide");
+    		var lis = slider.getElementsByTagName("li");  // 所有要操作的盒子
+   			 wrap.onmouseover = function() 
+   			 {  
+   			    // 鼠标经过显示和隐藏 左右两个箭头
+         		animate(arrow,{'opacity':100});
+    		 }
+    		wrap.onmouseout = function() 
+    		{
+        		animate(arrow,{'opacity':0});
+    		}
+    		var json = [
+        {   //  1
+            width:400,
+            top:20,
+            left:50,
+            opacity:20,
+            z:2
+        },
+        {  // 2
+            width:600,
+            top:70,
+            left:0,
+            opacity:80,
+            z:3
+        },
+        {   // 3
+            width:800,
+            top:100,
+            left:200,
+            opacity:100,
+            z:4
+        },
+        {  // 4
+            width:600,
+            top:70,
+            left:600,
+            opacity:80,
+            z:3
+        },
+        {   //5
+            width:400,
+            top:20,
+            left:750,
+            opacity:20,
+            z:2
+        }
+    ];
+    	var jieliu = true;
+    	var as = arrow.children;
+    	change();
+    	for(var k in as)
+    	{
+    		as[k].onclick = function()
+    		{
+    			if(this.className == "prev")
+    			{
+    				if(jieliu == true)
+    				{
+    					change(false);
+    					jieliu = false;
+    				}
+    			}
+    			else
+    			{
+    				if(jieliu == true)
+    				{
+    					change(true);
+    					jieliu = false;
+    				}
+    			}
+    		}
+    	}
+    	function change(flag)
+    	{
+    		if(flag)
+    		{
+    			//把最后一个删除   并且把最后一个添加到json第一个位置
+    			json.unshift(json.pop());
+    		}
+    		else
+    		{
+    			//移除第一个  放到json最后一个
+    			json.push(json.shift());
+    		}
+    		for(var i = 0; i < json.length;i++)
+    		{
+    			animate(lis[i],{
+    				width: json[i].width,
+    				top: json[i].top,
+    				left: json[i].left,
+    				opacity:json[i].opacity,
+    				zIndex:json[i].z
+    			},function(){jieliu = true;});
+    		}
+    	}	
+    }
+    </script>
+   
+
+  </head>
+  
+  <body>
+    <div class="wrap" id="wrap">
+   <div class="slide" id="slide">
+       <ul>
+           <li><a href="#"><img src="images/slidepic1.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic2.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic3.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic4.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic5.jpg" alt=""/></a></li>
+       </ul>
+       <div class="arrow" id="arrow">
+           <a href="javascript:;" class="prev"></a>
+           <a href="javascript:;" class="next"></a>
+       </div>
+   </div>
+</div>
+  </body>
+</html>

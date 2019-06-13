@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>网易轮播图.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+    	*{margin:0;padding:0;}
+    	img{vertical-align: top;}
+    	.w-slider
+    	{
+    		width: 310px;
+    		height: 265px;
+    		margin: 100px auto;
+    		position: relative;
+    		overflow: hidden;
+    		
+    	}
+    	.slider
+    	{
+    		width: 310px;
+    		height: 220px;
+    	}
+    	.slider-main
+    	{
+    		width: 620px;
+    		hieght: 220px;
+    	}
+    	.slider-main-img
+    	{
+    		position: absolute;
+    		top: 0;
+    		left: 0;
+    		width: 310px;
+    		height: 220px;
+    	}
+    	.slider-main-img img
+    	{
+    		width: 100%;
+    	}
+    	.slider-ctrl
+    	{
+    		text-align: center;
+    		padding-top: 5px;
+    	}
+    	.slider-ctrl-con
+    	{
+    		width: 24px;
+    		height: 20px;
+    		display: inline-block;
+    		background: url(./images/icon.png) no-repeat -24px -782px;
+    		margin: 0 5px;
+    		cursor: pointer;
+    		text-indent: -20em;
+    		overflow: hidden;
+    	}
+    	.current
+    	{
+    		background-position: -24px -762px;
+    	}
+    	.slider-ctrl-prev,
+    	.slider-ctrl-next
+    	{
+    		position:absolute;
+			top: 50%;
+			margin-top: -35px;
+			background: url(./images/icon.png) no-repeat 6px top; 
+			width: 30px;
+			height: 35px;
+			opacity: 0.8;
+			cursor: pointer;
+    	}
+    	.slider-ctrl-prev
+    	{
+    		left: 0;
+    	}
+    	.slider-ctrl-next
+    	{
+    		right: 0;
+    		background-position: -6px -44px;
+    	}
+    </style>
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/animate.js"></script>
+	<script type="text/javascript">
+		window.onload = function()
+		{
+			function $(id){return document.getElementById(id);}
+			var js_slider = $("js_slider");
+			var slider_main_block = $("slider_main_block");
+			var imgs = slider_main_block.children;
+			var slider_ctrl = $("slider_ctrl");
+			//生成小span
+			for(var i = 0; i < imgs.length;i++)
+			{
+				var span = document.createElement("span");
+				span.className = "slider-ctrl-con";
+				span.innerHTML = imgs.length - i;
+				slider_ctrl.insertBefore(span,slider_ctrl.children[1]);
+			}
+			var spans = slider_ctrl.children;
+			spans[1].setAttribute("class","slider-ctrl-con current");
+			
+			var scrollWidth = js_slider.clientWidth;  //大盒子的宽度
+			for(var i = 1;i < imgs.length;i++)
+			{
+				imgs[i].style.left = scrollWidth + "px";
+			}
+			var iNow = 0;
+			for(var k in spans)
+			{
+				spans[k].onclick = function()
+				{
+					if(this.className == "slider-ctrl-prev")  //左侧按钮
+					{
+						animate(imgs[iNow],{left: scrollWidth});
+						--iNow < 0 ? iNow = imgs.length - 1 : iNow;
+						imgs[iNow].style.left = -scrollWidth + "px";
+						animate(imgs[iNow],{left: 0});
+						setSquare();
+					}
+					else if(this.className == "slider-ctrl-next")
+					{
+						autoplay();
+					}
+					else
+					{
+						var that = this.innerHTML - 1;
+						if(that > iNow)
+						{
+							animate(imgs[iNow],{left: -scrollWidth});
+							imgs[that].style.left = scrollWidth + "px";
+						}
+						else if(that < iNow)
+						{
+							animate(imgs[iNow],{left: scrollWidth});
+							imgs[that].style.left = -scrollWidth + "px";
+						}
+						iNow = that;   //给当前索引号
+						animate(imgs[iNow],{left: -scrollWidth});
+						animate(imgs[iNow],{left: 0});
+						setSquare();
+					}
+				}
+			}
+			function setSquare()
+			{
+				for(var i = 1; i < spans.length - 1;i++)
+				{
+					spans[i].className = "slider-ctrl-con";
+				}
+				spans[iNow+1].className = "slider-ctrl-con current";
+			}
+			var timer = null;
+			timer = setInterval(autoplay,2000);
+			function autoplay()
+			{
+				animate(imgs[iNow],{left: -scrollWidth});
+				++iNow > imgs.length - 1 ? iNow = 0 : iNow;
+				imgs[iNow].style.left = scrollWidth + "px";
+				animate(imgs[iNow],{left: 0});
+				setSquare();
+			}
+			js_slider.onmouseover = function()
+			{
+				clearInterval(timer);
+			}
+			js_slider.onmouseout = function()
+			{
+				clearInterval(timer);
+				timer = setInterval(autoplay,2000);
+			}
+		}
+	</script>
+  </head>
+  
+  <body>
+    <div class="w-slider" id="js_slider">
+    	<div class="slider"> 
+    		<div class="slider-main" id="slider_main_block">
+    			<div class="slider-main-img"><a href="#"><img src="images/11.jpg" alt=""/></a></div>
+           		<div class="slider-main-img"><a href="#"><img src="images/22.jpg" alt=""/></a></div>
+            	<div class="slider-main-img"><a href="#"><img src="images/33.jpg" alt=""/></a></div>
+            	<div class="slider-main-img"><a href="#"><img src="images/44.jpg" alt=""/></a></div>
+            	<div class="slider-main-img"><a href="#"><img src="images/55.jpg" alt=""/></a></div>
+            	<div class="slider-main-img"><a href="#"><img src="images/66.jpg" alt=""/></a></div>
+    		</div>
+    	</div>
+    	<div class="slider-ctrl" id="slider_ctrl">
+			<span class="slider-ctrl-prev"></span>
+			<span class="slider-ctrl-next"></span>
+    	</div>
+    </div>
+  </body>
+</html>
+
